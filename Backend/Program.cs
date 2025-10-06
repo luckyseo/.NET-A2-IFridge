@@ -11,12 +11,10 @@ namespace Backend
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AppDbContext<AppDbContext>(opt =>
+            builder.Services.AddDbContext<AppDbContext>(opt =>
                 opt.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
-            // Repos & Services
-           // builder.Services.AddScoped<IItemRepository, ItemRepository>();
-           // builder.Services.AddScoped<IItemService, ItemService>();
+           
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -43,14 +41,12 @@ namespace Backend
                 app.UseSwaggerUI();
             }
             app.UseCors("blazor");
-
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
 
             app.MapControllers();
             app.MapGet("/api/test", () => new { message = "Hi from API" });
+
             app.Run();
         }
     }
