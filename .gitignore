@@ -1,0 +1,99 @@
+# --- OS junk ---
+.DS_Store
+Thumbs.db
+
+# --- IDEs / editors ---
+.vs/
+.idea/
+*.sln.iml
+
+# VS Code: keep shareable JSON, ignore the rest
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# --- .NET build artifacts ---
+bin/
+obj/
+out/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# --- ASP.NET Core / publish / logs ---
+artifacts/
+publish/
+logs/
+*.log
+
+# Local dev-only appsettings (keep appsettings.json + appsettings.Development.json)
+appsettings.*.Local.json
+
+# Azure publish profiles (often contain secrets)
+*.pubxml
+*.publishsettings
+
+# --- Entity Framework Core ---
+# (Keep Migrations/, they should be committed)
+# Migrations/
+
+# --- Blazor/Web assets ---
+# If you use LibMan and restore on build, ignore downloaded libs:
+wwwroot/lib/
+# If you generate client assets to wwwroot/dist:
+wwwroot/dist/
+
+# --- Node / JS tooling (Blazor WASM client, build scripts) ---
+node_modules/
+dist/
+build/
+# env files: keep production ones in your secret store instead
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+
+# --- Package managers (keep lockfiles to ensure reproducible builds) ---
+# DO NOT ignore: package-lock.json / pnpm-lock.yaml / yarn.lock
+
+# --- Testing / coverage ---
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# Playwright (.NET or JS)
+playwright-report/
+playwright/.cache/
+test-results/
+
+# --- SQLite / LiteDB / local data files ---
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+*.litedb
+
+# --- Rider / ReSharper caches ---
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# --- Misc build caches ---
+.nuke/
+.nuget/packages/
+*.nupkg
+*.snupkg
+
+# --- Certificates / keys (never commit secrets) ---
+*.pfx
+*.p12
+*.key
+*.cer
+
+# --- Containers ---
+docker-compose.override.yml
