@@ -1,3 +1,7 @@
+using Backend.AppData;
+using Backend.Services;
+using Backend.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend
 {
@@ -7,6 +11,16 @@ namespace Backend
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AppDbContext<AppDbContext>(opt =>
+                opt.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+
+            // Repos & Services
+           // builder.Services.AddScoped<IItemRepository, ItemRepository>();
+           // builder.Services.AddScoped<IItemService, ItemService>();
+
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -15,6 +29,10 @@ namespace Backend
                 p.WithOrigins("https://localhost:5173").AllowAnyHeader().AllowCredentials().AllowAnyMethod()));
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            // Repos & Services
+            builder.Services.AddScoped<IItemRepository, ItemRepository>();
+            builder.Services.AddScoped<IItemService, ItemService>();
 
             var app = builder.Build();
 
