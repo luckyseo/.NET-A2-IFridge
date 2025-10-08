@@ -1,4 +1,6 @@
 @page "/ingredients/view"
+@inject NavigationManager Navigation
+@inject IngredientService IngredientService
 
 <Navbar />
 
@@ -19,15 +21,10 @@
 </select>
 
 @* List of items - get ingredients as list *@
-
-
-@* <ul> 
-
-</ul> *@
-
 <table class="table table-striped">
     <thead>
         <tr>
+            <th>Id</th>
             <th>Name</th>
             <th>Category</th>
             <th>Quantity</th>
@@ -40,6 +37,7 @@
         @foreach (var ingredient in IngredientService.Ingredients)
         {
             <tr>
+                <td>@ingredient.Id</td>
                 <td>@ingredient.Name</td>
                 <td>@ingredient.Category</td>
                 <td>@ingredient.Quantity</td>
@@ -48,8 +46,8 @@
                 <td>
                 </td>
             </tr>
-            <button class="edit-btn" @onclick="EditIngredient()">Edit</button>
-            <button class="delete-btn" @onclick="DeleteIngredient()">Delete</button>
+            <button class="edit-btn" @onclick="() => EditIngredient(ingredient)">Edit</button>
+            <button class="delete-btn" @onclick="()=>DeleteIngredient(ingredient)">Delete</button>
         }
 
     </tbody>
@@ -57,45 +55,49 @@
 
 
 <style>
+    .searchbar,
+    .filterbar {
+        margin-bottom: 1rem;
+        padding: 0.5rem;
+        border: 1px solid black;
+        background-color: #F9FBFA;
+        width: 200px;
+    }
 </style>
 
 
 
 @code {
 
-    @* private void DeleteIngredient(Ingredient ingredient)
-    {
-        IngredientService.DeleteIngredient(ingredient);
-    } *@
-
-
     private string searchTerm = "";
     private string selectedCategory = "";
     private List<string> categories = new List<string>{
-"Veggie & Fruit",
-"Dairy",
-"Meat",
-"Seafood",
-"Beverages",
-"Snacks",
-"Other"
-};
+        "Veggie & Fruit",
+        "Dairy",
+        "Meat",
+        "Seafood",
+        "Beverages",
+        "Snacks",
+        "Other"
+        };
 
     private IEnumerable<IngredientsView> FilteredIngredients => IngredientService.Ingredient.Where(i => i.Category ==
     selectedCategory);
 
     private void EditIngredient(Ingredients ingredient)
     {
-        Mavigation.NavigateTo($"/ingredients/edit/{ingredient.id}");
+        @* Mavigation.NavigateTo($"/ingredients/edit/{ingredient.id}"); *@
+        Console.WriteLine("Edit ingredient");
     }
 
     private void DeleteIngredient(Ingredients ingredient)
     {
-
+        Console.WriteLine("Delete ingredient");
     }
 
 
 
     //References
-    //guardrex. (2024, November 12). ASP.NET Core Blazor event handling. Microsoft.com.https://learn.microsoft.com/en-us/aspnet/core/blazor/components/event-handling?view=aspnetcore-9.0
+    //guardrex. (2024, November 12). ASP.NET Core Blazor event handling.
+    //Microsoft.com.https://learn.microsoft.com/en-us/aspnet/core/blazor/components/event-handling?view=aspnetcore-9.0
 }
