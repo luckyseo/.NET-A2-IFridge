@@ -1,0 +1,34 @@
+@page "/shoppingglist"
+@inject NavigationManager Navigation 
+
+<Navbar />
+<MenuHeader Title="Shopping List" Buttons="@Buttons" OnButtonClick="OnButtonClicked" />
+
+
+<main>
+    @BodyContent
+</main>
+
+
+
+
+@code {
+    private List<string> Buttons = new() { "View my list", "Add new list" };
+    private RenderFragment BodyContent;
+
+    private void OnButtonClicked(string btn)
+    {
+        switch (btn)
+        {
+            case "View my list":
+                Navigation.NavigateTo("/shoppinglist/view");
+                break;
+            case "Add new ingredient":
+                Navigation.NavigateTo("/shoppinglist/add");
+                break;
+        }
+
+    }
+
+
+}

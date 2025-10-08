@@ -1,0 +1,17 @@
+.menu-head {
+  display: flex;
+  flex-direction: row;
+}
+
+.profile-icon {
+  cursor: pointer;
+  width: 140px;
+  height: 136px;
+}
+
+button.btn {
+  width: 258px;
+  height: 70px;
+  background-color: #1f2937;
+  color: white;
+}

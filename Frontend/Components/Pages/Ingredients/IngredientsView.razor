@@ -1,0 +1,101 @@
+@page "/ingredients/view"
+
+<Navbar />
+
+<h3>My Available Ingredients</h3>
+
+@* searchbar component here *@
+@* filter component here as a dropdown list *@
+
+<h3>Available ingredients: </h3>
+<input class="searchbar" @bind="searchTerm" placeholder="Find an ingredient" />
+
+<select class="filterbar" @bind="selectedCategory">
+    <option value="">All</option>
+    @foreach (var category in categories)
+    {
+        <option value="@category">@category</option>
+    }
+</select>
+
+@* List of items - get ingredients as list *@
+
+
+@* <ul> 
+
+</ul> *@
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Opened date</th>
+            <th>Expired date</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var ingredient in IngredientService.Ingredients)
+        {
+            <tr>
+                <td>@ingredient.Name</td>
+                <td>@ingredient.Category</td>
+                <td>@ingredient.Quantity</td>
+                <td>@ingredient.OpenedDate</td>
+                <td>@ingredient.ExpiredDate</td>
+                <td>
+                </td>
+            </tr>
+            <button class="edit-btn" @onclick="EditIngredient()">Edit</button>
+            <button class="delete-btn" @onclick="DeleteIngredient()">Delete</button>
+        }
+
+    </tbody>
+</table>
+
+
+<style>
+</style>
+
+
+
+@code {
+
+    @* private void DeleteIngredient(Ingredient ingredient)
+    {
+        IngredientService.DeleteIngredient(ingredient);
+    } *@
+
+
+    private string searchTerm = "";
+    private string selectedCategory = "";
+    private List<string> categories = new List<string>{
+"Veggie & Fruit",
+"Dairy",
+"Meat",
+"Seafood",
+"Beverages",
+"Snacks",
+"Other"
+};
+
+    private IEnumerable<IngredientsView> FilteredIngredients => IngredientService.Ingredient.Where(i => i.Category ==
+    selectedCategory);
+
+    private void EditIngredient(Ingredients ingredient)
+    {
+        Mavigation.NavigateTo($"/ingredients/edit/{ingredient.id}");
+    }
+
+    private void DeleteIngredient(Ingredients ingredient)
+    {
+
+    }
+
+
+
+    //References
+    //guardrex. (2024, November 12). ASP.NET Core Blazor event handling. Microsoft.com.https://learn.microsoft.com/en-us/aspnet/core/blazor/components/event-handling?view=aspnetcore-9.0
+}

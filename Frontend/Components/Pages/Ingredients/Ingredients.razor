@@ -1,0 +1,28 @@
+@page "/ingredients"
+@inject NavigationManager Navigation
+
+<Navbar />
+<MenuHeader Title="Ingredients" Buttons="@Buttons" OnButtonClick="OnButtonClicked" />
+
+
+<main>
+    @BodyContent
+</main>
+
+@code {
+    private List<string> buttons = new() { "View available ingredients", "Add new ingredient" };
+    private RenderFragment BodyContent;
+
+    private void OnButtonClicked(string btn)
+    {
+        switch (btn)
+        {
+            case "View available ingredients":
+                Navigation.NavigateTo("/ingredients/view");
+                break;
+            case "Add new ingredient":
+                Navigation.NavigateTo("/ingredients/add");
+                break;
+        }
+    }
+}

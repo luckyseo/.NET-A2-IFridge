@@ -1,7 +1,29 @@
-﻿@page "/"
+@page "/"
+@inject NavigationManager Navigation
 
-<PageTitle>Home</PageTitle>
+<MenuHeader Title="Home" Button="@buttons" OnButtonClick="OnButtonClicked"> </MenuHeader>
 
-<h1>Hello, world!</h1>
+<main>
+    @BodyContent
+</main>
 
-Welcome to your new app.
+@code {
+    private List<string> Buttons = new() { "My Ingredients", "Recipes", "Shopping List" };
+    private RenderFragment BodyContent;
+
+    private void OnButtonClicked(string btn)
+    {
+        switch (btn)
+        {
+            case "My Ingredients":
+                Navigation.NavigateTo("/ingredients");
+                break;
+            case "Recipes":
+                Navigation.NavigateTo("/recipes");
+                break;
+             case "Shopping List":
+                Navigation.NavigateTo("/shoppinglist/add");
+                break;
+        }
+    }
+}

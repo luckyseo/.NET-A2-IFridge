@@ -1,0 +1,58 @@
+@page "/shoppinglist/view"
+@inject ShoppingListService ListService
+
+<h3>View my lists</h3>
+
+@*retrieve from model and display as cards*@
+
+<div class="card">
+    @foreach (var list in ListService.GetAll())
+    {
+        <div class="card-container">
+            <div class="card-body">
+                <h5 class="center-head">@list.Title</h5>
+                <span class="center-head">Date: @list.DateCreated.ToShortDateString() </span>
+                <ul>
+                    @foreach (var item in list.Items)
+                    {
+                        <li>@item</li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <button class="btn btn-danger mt-2" @onclick="() => DeleteList(list)">Delete</button>
+    }
+</div>
+
+
+<style>
+    .card {
+        margin: 20px auto;
+    }
+
+    .card-container {
+        font-size: 24px;
+        background: #F9FBFA;
+        border: 1px solid black;
+        width: 62rem;
+        height: 25rem;
+    }
+
+    .card-body {
+        text-align: left;
+        margin-left: 20px;
+    }
+
+    .center-head {
+        text-align: center;
+        font-weight: 500;
+    }
+</style>
+
+
+@code {
+    private void DeleteList(ShoppingList list)
+    {
+        ListService.Remove(list);
+    }
+}
