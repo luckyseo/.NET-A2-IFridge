@@ -15,7 +15,7 @@ public class ShoppinglistService()
 
 }
 
-public class Shoppinglist
+public class ShoppinglistModel
 {
     public string Title { get; set; } = "";
     public List<string> Items { get; set; } = new();

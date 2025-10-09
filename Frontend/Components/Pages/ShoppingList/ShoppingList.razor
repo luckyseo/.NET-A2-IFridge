@@ -1,19 +1,18 @@
-@page "/shoppingglist"
+@page "/shoppinglist"
 @inject NavigationManager Navigation 
+@using Frontend.Components; 
+@using Frontend.Service
+
 
 <Navbar />
-<MenuHeader Title="Shopping List" Buttons="@Buttons" OnButtonClick="OnButtonClicked" />
-
-
-<main>
-    @BodyContent
-</main>
-
-
+<h3>Shopping List</h3>
+<div class="btn-group"> 
+<button class="btn" @onclick="@(() => OnButtonClicked("View my list"))">View my list</button>
+<button class="btn" @onclick="@(() => OnButtonClicked("Make a list"))">Make a list</button>
+</div>
 
 
 @code {
-    private List<string> Buttons = new() { "View my list", "Add new list" };
     private RenderFragment BodyContent;
 
     private void OnButtonClicked(string btn)
@@ -23,7 +22,7 @@
             case "View my list":
                 Navigation.NavigateTo("/shoppinglist/view");
                 break;
-            case "Add new ingredient":
+            case "Make a list":
                 Navigation.NavigateTo("/shoppinglist/add");
                 break;
         }

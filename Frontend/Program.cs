@@ -1,5 +1,8 @@
 using Frontend.Components;
 
+//resgister service here 
+// 
+
 namespace Frontend
 {
     public class Program
@@ -13,6 +16,10 @@ namespace Frontend
                 .AddInteractiveServerComponents();
 
             var app = builder.Build();
+
+            //register service
+            builder.Services.AddSingleton<ShoppingListService>();
+
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

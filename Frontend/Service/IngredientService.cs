@@ -1,3 +1,4 @@
+//service handles api request calling
 public class IngredientService
 {
     private List<Ingredient> _ingredients = new();

@@ -1,29 +1,12 @@
+@* landing page *@
+
 @page "/"
 @inject NavigationManager Navigation
 
-<MenuHeader Title="Home" Button="@buttons" OnButtonClick="OnButtonClicked"> </MenuHeader>
 
-<main>
-    @BodyContent
-</main>
+<Navbar />
 
-@code {
-    private List<string> Buttons = new() { "My Ingredients", "Recipes", "Shopping List" };
-    private RenderFragment BodyContent;
+<h1>Welcome to IFridge</h1>
 
-    private void OnButtonClicked(string btn)
-    {
-        switch (btn)
-        {
-            case "My Ingredients":
-                Navigation.NavigateTo("/ingredients");
-                break;
-            case "Recipes":
-                Navigation.NavigateTo("/recipes");
-                break;
-             case "Shopping List":
-                Navigation.NavigateTo("/shoppinglist/add");
-                break;
-        }
-    }
-}
+<p>Let's get started</p>
+
