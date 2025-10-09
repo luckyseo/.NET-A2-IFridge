@@ -1,40 +1,42 @@
-@using Frontend.Service; 
-
+@using Frontend.Service;
 @page "/shoppinglist/add"
 @inject ShoppingListService ListService
+@inject NavigationManager Navigation
 
 
 <h3>Make a list</h3>
 
-<EditForm Model="@model" OnValidSubmit="Submit">
+<EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div class="mb-3">
-        <label class="form-label">Title </label>
-        <InputTextArea @bind-Value="model.Title" placeholder="e.g. Milk, Egg, Tomato" class="form-control" />
-    </div>
-
 
     <div class="mb-3">
-        <label class="form-label">Enter items to buy: </label>
-        <InputTextArea @bind-Value="model.Items" placeholder="e.g. Milk, Egg, Tomato" class="form-control" />
+        <label class="form-label">
+            Title:
+            <InputText @bind-Value="model.Title" />
+        </label>
     </div>
 
-    <div class="d-flex gap-2">
-        <button type="submit" class="btn">Add</button>
-        <button type="button" @onClick="ClearForm" class="btn">Reset</button>
+    <div class="mb-3">
+        <label class="form-label">
+            Title:
+            <InputTextArea @bind-Value="items" placeholder="e.g. Egg, Tomato, Onion" />
+        </label>
     </div>
+
+    <button type="submit" class="btn btn-primary">Add</button>
+    <button type="button" class="btn btn-primary" @onclick="ClearForm">Clear</button>
+
 </EditForm>
 
 @code {
     private ShoppingList model = new();
     private string items = "";
 
-    private void Submit()
+    private void HandleValidSubmit()
     {
         model.Items = items.ToList();
-
         ListService.Add(model);
         Navigation.NavigateTo("shoppinglist/view");
     }
@@ -45,29 +47,3 @@
         items = "";
     }
 }
-
-
-<style>
-    .form-control {
-        border: 1px solid #000;
-        background: #F9FBFA;
-        padding: 0.5rem;
-        width: 1002px;
-        height: 238px;
-    }
-
-    label .form-label {
-        font-size: 40px;
-        font-weight: bold;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    }
-
-    .btn {
-        width: 221px;
-        height: 104px;
-        border-radius: 50px;
-        background: #1F2937;
-        color: white;
-        font-weight: bold; 
-    }
-</style>

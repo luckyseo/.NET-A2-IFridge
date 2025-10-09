@@ -1,103 +1,68 @@
 @page "/ingredients/add"
 @inject NavigationManager Navigation
 @inject IngredientService IngredientService
-
+@using Frontend.components
 
 <h3>Add New Ingredients</h3>
 
-
-<EditForm Model="@model" OnValidSubmit="Submit" class="form-container">
+<EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div class="form-group">
-        <label class="form-label">Id: </label>
-        <InputNumber @bind-Value="model.Id" class="form-control" disabled />
+    @* add bootstrap form classes *@
+
+    <div class="mb-3">
+        <label class="form-label">
+            Ingredient:
+            <InputText @bind-Value="model.Ingredient" />
+        </label>
     </div>
 
-    <div class="form-group">
-        <label class="form-label">Ingredient: </label>
-        <InputText @bind-Value="model.Name" placeholder="Enter ingredient name" class="form-control" />
+    @* Dropdown list *@
+    <div class="mb-3">
+        <label class="form-label">
+            Category:
+            <InputSelect class="form-select" @bind-Value="model.Category">
+                <option disabled selected value="">All</option>
+                <option>Meat and fish</option>
+                <option>Vegetables</option>
+                <option>Fruits</option>
+                <option>Carbs</option>
+                <option>Spices and herbs</option>
+                <option>Herbs and spices</option>
+                <option>Other</option>
+            </InputSelect>
+        </label>
     </div>
 
-    <div class="form-group">
-        <label class="form-label">Category: </label>
-        <InputText @bind-Value="model.Category" placeholder="Select a category" class="form-control" />
+    <div class="mb-3">
+        <label class="form-label">
+            Quantity:
+            <InputNumber class="form-control" @bind-Value="model.Quantity" />
+        </label>
     </div>
 
-    <div class="form-groupr">
-        <label class="form-label">Quantity: </label>
-        <InputNumber @bind-Value="model.Quantity" placeholder="Enter quantity" class="form-control" />
+    <div class="mb-3">
+        <label class="form-label">
+            Opened date:
+            <InputDate class="form-control" @bind-Value="model.OpenedDate" />
+        </label>
     </div>
 
-    <div class="form-group">
-        <label class="form-label">Opened date: </label>
-        <InputDate @bind-Value="model.OpenedDate" class="form-control" />
+    <div class="mb-3">
+        <label class="form-label">
+            Expired date
+            <InputDate class="form-control" @bind-Value="model.ExpiredDate" />
+        </label>
     </div>
 
-    <div class="form-group">
-        <label class="form-label">Expired date: </label>
-        <InputDate @bind-Value="model.ExpiredDate" class="form-control" />
-    </div>
-
-    <div class="button-container">
-        <button type="submit" class="btn" @onclick="Submit">Add</button>
-        <button class="btn" @onclick="ClearForm">Reset</button>
-    </div>
-
+    <button type="submit" class="btn btn-primary"">Add</button>
 </EditForm>
 
-<style>
-    .form-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        max-width: 700px;
-        margin: auto;
-        background-color: white;
-        padding: 2rem;
-        border: none;
-    }
-
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        flex: 1 1 300px;
-    }
-
-    .form-control {
-        gap: 1rem;
-        margin: auto;
-        background-color: #F9FBFA;
-        border: 1px solid black;
-        padding: 0.5rem 0.75rem;
-    }
-
-    .form-label {
-        font-weight: 500;
-        margin-bottom: 0.4rem;
-    }
-
-    .button-container {
-        display: flex;
-        justify-items: flex-end;
-    }
-
-    .btn {
-        width: 221px;
-        height: 104px;
-        border-radius: 50px;
-        background: #1F2937;
-        color: white;
-        font-weight: bold;
-        cursor: pointer;
-    }
-</style>
-
-
+ @* Logic code block *@
 @code {
     private Ingredients model = new();
-    private void Submit()
+    private void HandleValidSubmit()
     {
         IngredientService.AddIngredient(model);
         Navigation.NavigateTo("/ingredients/view");
