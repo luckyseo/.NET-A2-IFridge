@@ -1,9 +1,7 @@
-@page "/shoppinglist/view"
+@* @page "/shoppinglist/view"
 @inject ShoppingListService ListService
 
 <h3>View my lists</h3>
-
-@*retrieve from model and display as cards*@
 
 <div class="card">
     @foreach (var list in ListService.GetAll())
@@ -55,4 +53,4 @@
     {
         ListService.Remove(list);
     }
-}
+} *@

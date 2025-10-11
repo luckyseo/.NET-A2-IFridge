@@ -1,4 +1,4 @@
-@page "/ingredients/view"
+@* @page "/ingredients/view"
 @inject NavigationManager Navigation
 @inject IngredientService IngredientService
 
@@ -6,8 +6,6 @@
 
 <h3>My Available Ingredients</h3>
 
-@* searchbar component here *@
-@* filter component here as a dropdown list *@
 
 <h3>Available ingredients: </h3>
 <input class="searchbar" @bind="searchTerm" placeholder="Find an ingredient" />
@@ -20,7 +18,6 @@
     }
 </select>
 
-@* List of items - get ingredients as list *@
 <table class="table table-striped">
     <thead>
         <tr>
@@ -86,7 +83,6 @@
 
     private void EditIngredient(Ingredients ingredient)
     {
-        @* Mavigation.NavigateTo($"/ingredients/edit/{ingredient.id}"); *@
         Console.WriteLine("Edit ingredient");
     }
 
@@ -94,10 +90,9 @@
     {
         Console.WriteLine("Delete ingredient");
     }
+ *@
 
-
-
+@* 
     //References
     //guardrex. (2024, November 12). ASP.NET Core Blazor event handling.
-    //Microsoft.com.https://learn.microsoft.com/en-us/aspnet/core/blazor/components/event-handling?view=aspnetcore-9.0
-}
+    //Microsoft.com.https://learn.microsoft.com/en-us/aspnet/core/blazor/components/event-handling?view=aspnetcore-9.0 *@

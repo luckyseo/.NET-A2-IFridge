@@ -1,4 +1,7 @@
-using Frontend.Components;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Frontend.Services;
+using Frontend.Service;
 
 //resgister service here 
 // 
@@ -12,14 +15,21 @@ namespace Frontend
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddRazorComponents()
-                .AddInteractiveServerComponents();
+            //builder.Services.AddRazorComponents()
+            //   .AddInteractiveServerComponents();
+
+
+            //Testing the front end 
+
+            // Add services to the container.
+            builder.Services.AddRazorPages();
+            builder.Services.AddServerSideBlazor();
+
+            // Register your services here:
+            builder.Services.AddSingleton<ShoppingListService>();
+            builder.Services.AddSingleton<IngredientService>();
 
             var app = builder.Build();
-
-            //register service
-            builder.Services.AddSingleton<ShoppingListService>();
-
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -41,3 +51,4 @@ namespace Frontend
         }
     }
 }
+//connect to backend  program.cs
