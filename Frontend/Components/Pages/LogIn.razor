@@ -9,17 +9,30 @@
 <EditForm Model="@model" OnValidSubmit="HandleLogin" class="container">
     <DataAnnotationsValidator />
     <div>
-    <div></div>
+    <labal class="form-label">ID</labal>
+    <InputText @bind-Value="model.id" class="form-control"/>
     </div>
-    <button type="submit" class="btn btn-primary"">Sign Up</button>
+    <div>
+    <labal class="form-label">PW</labal>
+    <InputText @bind-Value="model.pw" class="form-control"/>
+    </div>
+    <button type="submit" class="btn btn-primary"">log in</button>
 </EditForm>
-
+    <div>
+    <h4>New Here?</h4>
+    <a href="/register">Sign-Up</a>
+    </div>
 @code {
-    private Ingredient model = new();
-    private void HandleValidSubmit()
+    private LoginModel model = new();
+    private string err = string.Empty;
+    private async Task HandleLogin()
     {
-        IngredientService.AddIngredient(model);
-        Navigation.NavigateTo("/ingredients/view");
+        var success = await loginService.LoginAsync(model);
+        if(success){
+            NavigateTo("/");
+        }else{
+            err = "Invalid Id/pw";
+        }
     }
 
     private void ClearForm() => model = new();

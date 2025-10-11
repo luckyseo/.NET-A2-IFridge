@@ -21,10 +21,10 @@ public class LoginController : ControllerBase
         _context = context;
     }
 
-    [HttpPost("auth")]
-    public async Task<ActionResult<User>> Login([FrameBody] LoginRequest request)
+    [HttpPost("auth")] //login/auth
+    public async Task<ActionResult<User>> Login([FromBody] LoginRequest request)
     {
-        var user = await _context.Users.FirstorDefaultAsync(u => u.id == request.id && u.pw == request.pw);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.id == request.id && u.pw == request.pw);
 
         if (user == null)
         {
@@ -41,7 +41,7 @@ public class LoginController : ControllerBase
         });
     }
 
-    [HttpPost("register")]
+    [HttpPost("register")] //login/register
     public async Task<ActionResult<User>> Register([FromBody] RegisterRequest request)
     {
         if (await _context.Users.AnyAsync(u => u.id == request.id))
@@ -83,6 +83,7 @@ public class LoginController : ControllerBase
         public string id { get; set; } = string.Empty;
 
         public string pw { get; set; } = string.Empty;
+        public List<string>? Allergies { get; set; }
 
     }
 }
