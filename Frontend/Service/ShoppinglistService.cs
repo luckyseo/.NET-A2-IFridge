@@ -1,13 +1,16 @@
+using Frontend.Models;
+using System.Net.Http.Json;
+
 namespace Frontend.Service
 {
 
-    public class ShoppinglistService()
+    public class ShoppingListService
     {
 
-        private readonly List<Shoppinglist> _list = new Shoppinglist();
-        public IEnumerable<ShoppingListModel> GetAll() => _lists;
+        private readonly List<ShoppingListModel> _list = new List<ShoppingListModel>();
+        public IEnumerable<ShoppingListModel> GetAll() => _list;
 
-        public void Add(Shoppinglist list)
+        public void Add(ShoppingListModel list)
         {
             if (list.Title is not null)
             {
@@ -18,11 +21,11 @@ namespace Frontend.Service
 
     }
 
-    public class ShoppinglistModel
-    {
-        public string Title { get; set; } = "";
-        public List<string> Items { get; set; } = new();
-        public DateTime DateCreated { get; set; } = DateTime.Now;
+    // public class ShoppinglistModel
+    // {
+    //     public string Title { get; set; } = "";
+    //     public List<string> Items { get; set; } = new();
+    //     public DateTime DateCreated { get; set; } = DateTime.Now;
 
-    }
+    // }
 }
