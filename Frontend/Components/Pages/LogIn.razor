@@ -9,7 +9,7 @@
 <EditForm Model="@model" OnValidSubmit="HandleLogin" class="container">
     <DataAnnotationsValidator />
     <div>
-    <labal class="form-label">ID</labal>
+    <label class="form-label">ID</label>
     <InputText @bind-Value="model.id" class="form-control"/>
     </div>
     <div>
@@ -29,7 +29,7 @@
     {
         var success = await loginService.LoginAsync(model);
         if(success){
-            NavigateTo("/");
+            Navigation.NavigateTo("/");
         }else{
             err = "Invalid Id/pw";
         }
