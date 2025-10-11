@@ -20,6 +20,13 @@ public class LoginController : ControllerBase
     {
         _context = context;
     }
+    [HttpGet("check/{id}")]
+    public async Task<ActionResult> CheckIdExists(string id)
+    {
+        var exists = await _context.Users.AnyAsync(u => u.id == id);
+
+        return Ok(new { exitst = exists });
+    }
 
     [HttpPost("auth")] //login/auth
     public async Task<ActionResult<User>> Login([FromBody] LoginRequest request)

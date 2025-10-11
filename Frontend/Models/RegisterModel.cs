@@ -4,13 +4,17 @@ namespace Frontend.Models;
 
 public class RegisterModel
 {
-    [Required]
+    [Required(ErrorMessage ="This is Required Field")]
     public string id { get; set; }
-    [Required]
+    [Required(ErrorMessage ="This is Required Field")]
     public string pw { get; set; }
-    [Required]
+    [Required(ErrorMessage ="This is Required Field")]
     public string firstName { get; set; }
-    [Required]
+    [Required(ErrorMessage ="This is Required Field")]
     public string lastName { get; set; }
+
+    public string preferredName { get; set; }
+
+    public string allergies { get; set; }
     
 }

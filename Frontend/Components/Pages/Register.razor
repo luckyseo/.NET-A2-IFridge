@@ -1,2 +1,93 @@
 @page "/register"
 
+@inject LoginService loginService
+@inject NavigationManager Navigation
+@using Frontend.Models
+@using Frontend.Service
+@rendermode InteractiveServer
+
+<h3>Sign Up to IFridge</h3>
+
+<EditForm Model="@model" OnValidSubmit="HandleRegister" class="container">
+    <DataAnnotationsValidator />
+    <div>
+    <labal class="form-label">First Name</labal>
+    <InputText @bind-Value="model.firstName" class="form-control"/>
+    <ValidationMessage For="@(()=>model.FristName)"/>
+    </div>
+    <div>
+    <labal class="form-label">Last Name</labal>
+    <InputText @bind-Value="model.lastName" class="form-control"/>
+     <ValidationMessage For="@(()=>model.lastName)"/>
+    </div>
+    <div>
+    <labal class="form-label">Preferred Name</labal>
+    <InputText @bind-Value="model.preferredName" class="form-control"/>
+    </div>
+    <div>
+    <label class="form-label">Allergies</label>
+    <InputText @bind-Value="model.allergies" class="form-control" placeholder="e.g. peanut, diary"/>
+    </div>
+    <div>
+    <label class="form-label">ID</label>
+    <div class="input-group">
+        <InputText @bind-Value="model.id" @onblur="CheckIdAvailability"class="form-control"/>
+        <button type=button @onclick="CheckIdAvailability disabled" @isCheckingId">
+        @if(isCheckingId){
+            <span>Checking ...</span>
+        }
+        else{
+            <span>Check</span>
+        }
+        </button>
+  
+    <div>
+     <ValidationMessage For="@(()=>model.id)"/>
+
+    <labal class="form-label">PW</labal>
+    <InputText @bind-Value="model.pw" class="form-control"/>
+     <ValidationMessage For="@(()=>model.pw)"/>
+    </div>
+    <button type="submit" class="btn btn-primary"">Sign Up</button>
+</EditForm>
+<div>
+    <p>Already registered? </p><a href="/login">Login</a>
+</div>
+
+@code {
+    private RegisterModel model = new();
+    private string err = string.Empty;
+
+    private bool isCheckingId=false;
+    private bool idExists = false;
+    private string idCheckingMessage = string.Empty;
+
+    private async Task CheckIdAvailability(){
+        if(string.IsNullOrWhiteSpace(model.id)){
+            idCheckMessage =string.Empty;
+            return;
+        }
+        isCheckingId = true;
+        idCheckingMessage = "Checking availbilty";
+        idExists await loginService.CheckIdExistsAsync(model.id);
+
+        if(idExists){
+            idCheckMessage="Already exists";
+        }
+        else{
+            idCheckMessage="Available";
+        }
+        isCheckingId=false;
+    }
+    private async Task HandleRegister()
+    {
+        var success = await loginService.RegisterAsync(model);
+        if(success){
+            Navigation.NavigateTo("/");
+        }else{
+            err = "Invalid Id/pw";
+        }
+    }
+
+    private void ClearForm() => model = new();
+}
