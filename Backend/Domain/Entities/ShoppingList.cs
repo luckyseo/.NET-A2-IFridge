@@ -7,8 +7,7 @@ namespace Backend.Domain.Entities
 
         public DateTime DateCreated { get; set; } = DateTime.Now;
 
-        //get user input items 
-        public List<ShoppingListItems> Items { get; set; } = new(); 
-
+        public string Items { get; set; } = "";
+        //store as string, ask user to inut this in a textarea then format as bullet point in frontend 
     }
 }

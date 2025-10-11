@@ -1,0 +1,68 @@
+
+
+Action method 
+
+FirstOrDefaultAsync()
+Include. ThenInclude
+
+Route data 
+-> controller, action, id segments
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+});
+
+Instructor as controller,
+Index as action,
+1 as id
+
+Route data value
+http://localhost:1230/Instructor/Index/1?courseID=2021
+
+Pass a query string value: 
+http://localhost:1230/Instructor/Index?id=1&CourseID=2021
+
+
+Add as a query string in Razor code
+<a asp-action="Edit" asp-route-id="@item.ID">Edit</a>
+
+
+In html field
+@Html.DisplayNameFor(model => model.LastName)
+@Html.DisplayName(model => model.LastName)
+
+
+
+@foreach (var item in Model.Entrollements){
+    @Html.DisplayFor(modelItem => item.Course.Title)
+    @Html.DisplayFor(modelItem => item.Grade)
+    ... 
+}
+
+
+Create 
+[HttpPost]
+[ValudateAntiForgeryTkoen]
+
+public async Task<IActionResult> Create(
+    [Bind("Date,Name")] Student student)
+    {
+        try{
+            if(ModelState.IsValid){
+                _context.Add(student);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            
+            }
+        } catch (DbUpdateException){
+
+        }ModelState.AddModelError("Error");
+    }
+    return View(student); 
+}
+
+
+Sorts
