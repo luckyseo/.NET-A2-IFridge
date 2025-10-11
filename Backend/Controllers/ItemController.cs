@@ -1,12 +1,14 @@
-using Backend.Domain.Entities;
-using Backend.Services;
-using Microsoft.AspNetCore.Mvc;
+//Using this as a psedue code to for controller.cs
 
-namespace Backend.Controllers;
+// using Backend.Domain.Entities;
+// using Backend.Services;
+// using Microsoft.AspNetCore.Mvc;
 
-[ApiController]
-[Route("api/[controller]")]
-public class ItemsController : ControllerBase
+// namespace Backend.Controllers;
+
+// [ApiController]
+// [Route("api/[controller]")]
+// public class ItemsController : ControllerBase
 {
     // private readonly IItemService _itemService;
 

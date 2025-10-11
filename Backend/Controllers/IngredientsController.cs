@@ -20,19 +20,19 @@ public class IngredientController : ControllerBase
     //List all ingredients
     //GET / api / ingredient
     [HttpGet]
-    public Task<ActionResult<IEnumerable<Ingredients>>> GetAll()
+    public async Task<ActionResult<IEnumerable<Ingredients>>> GetAll()
     {
-        var ingredients = _context.Ingredients.ToList();
+        var ingredients = await _context.Ingredients.ToListAsync();
         return Ok(ingredients);
     }
 
     //Get an ingredient based on id
     //GET /api/ingredient/{id} 
     [HttpGet("{id}")]
-    public Task<ActionResult<Ingredients>> GetIngredientById(int id)
+    public async Task<ActionResult<Ingredients>> GetIngredientById(int id)
     {
-        var ingredient = _context.Ingredients.Find(id);
-        if (ingredient is not null)
+        var ingredient = await _context.Ingredients.FindAsync(id);
+        if (ingredient == null)
             return NotFound();
         else
             return Ok(ingredient);
@@ -41,11 +41,11 @@ public class IngredientController : ControllerBase
     //add new ingredient when entering the add form
     //POST /api/ingredient 
     [HttpPost]
-    public Task<ActionResult<Ingredient>> Create(IngredientController ingredient)
+    public async Task<ActionResult<Ingredient>> Create([FromBody] Ingredient createdIngredient)
     {
-        _context.Ingredients.Add(ingredient);
-        _context.SaveChanges();
-        return CreatedAtAction(nameof(GetIngredientById), new { id = ingredient.Id }, ingredient);
+        _context.Ingredients.Add(createdIngredient);
+        await _context.SaveChangesAsync();
+        return CreatedAtAction(nameof(GetIngredientById), new { id = createdIngredient.Id }, createdIngredient);
     }
 
 
@@ -54,36 +54,36 @@ public class IngredientController : ControllerBase
     //PUT / api / ingredient /{ id}
     //update ingredient [name, category, quantity, opened date, expired date] 
     [HttpPut("{id}")]
-    public Task<IActionResult> Update(int id, IngredientController updatedIngredient)
+    public async Task<IActionResult> Update(int id, [FromBody] Ingredient updatedIngredient)
     {
+        if (id != updatedIngredient.Id)
+            return BadRequest("Id mismatch");
 
-        if (id != updatedIngredient.id)
-            return NotFound();
-        var existingIngredient = _context.Ingredients.Find(id);
-        if (existingIngredient is null)
+        var existingIngredient = await _context.Ingredients.FindAsync(id);
+        if (existingIngredient == null)
             return NotFound();
 
+            //Update data
         existingIngredient.Name = updatedIngredient.Name;
         existingIngredient.Quantity = updatedIngredient.Quantity;
         existingIngredient.Category = updatedIngredient.Category; 
         existingIngredient.OpenedDate = updateIngrdient.OpenedDate; 
         existingIngredient.ExpiredDate = updatedIngredient.ExpiredDate;
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
-
 
     //remove ingredient 
     //DELETE /api/ingredient/{id}
     [HttpDelete("{id}")]
-    public Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        var ingredient = _context.Ingredients.Find(id);
+        var ingredient = await _context.Ingredients.FindAsync(id);
         if (ingredient == null)
             return NotFound();
 
         _context.Ingredients.Remove(ingredient);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
 }
