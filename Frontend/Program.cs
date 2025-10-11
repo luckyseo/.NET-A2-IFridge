@@ -25,6 +25,7 @@ namespace Frontend
             // builder.Service.AddServerSideBlazor();
 
             // Register your services here:
+            builder.Services.AddScoped<LoginService>();
             builder.Services.AddSingleton<ShoppingListService>();
             builder.Services.AddSingleton<IngredientService>();
 

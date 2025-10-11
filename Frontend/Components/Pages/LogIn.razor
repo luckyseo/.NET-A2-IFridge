@@ -1,0 +1,26 @@
+@page "/login"
+@inject LoginService loginService
+@inject NavigationManager Navigation
+@using Frontend.Models
+@using Frontend.Service
+
+<h3>Welcome to IFridge</h3>
+
+<EditForm Model="@model" OnValidSubmit="HandleLogin" class="container">
+    <DataAnnotationsValidator />
+    <div>
+    <div></div>
+    </div>
+    <button type="submit" class="btn btn-primary"">Sign Up</button>
+</EditForm>
+
+@code {
+    private Ingredient model = new();
+    private void HandleValidSubmit()
+    {
+        IngredientService.AddIngredient(model);
+        Navigation.NavigateTo("/ingredients/view");
+    }
+
+    private void ClearForm() => model = new();
+}
