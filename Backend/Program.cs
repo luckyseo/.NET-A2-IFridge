@@ -31,8 +31,8 @@ namespace Backend
             builder.Services.AddSwaggerGen();
 
             // Repos & Services
-            builder.Services.AddScoped<IItemRepository, ItemRepository>();
-            builder.Services.AddScoped<IItemService, ItemService>();
+            // builder.Services.AddScoped<IItemRepository, ItemRepository>();
+            // builder.Services.AddScoped<IItemService, ItemService>();
 
             var app = builder.Build();
 
