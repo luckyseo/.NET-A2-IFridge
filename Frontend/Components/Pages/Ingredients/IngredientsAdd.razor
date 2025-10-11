@@ -1,8 +1,10 @@
 @page "/ingredients/add"
 @inject NavigationManager Navigation
 @inject IngredientService IngredientService
-@using Frontend.components
+@using Frontend.Components
 @using Frontend.Components.Shared
+@using Frontend.Service
+@using Frontend.Models
 
 <Navbar />
 
@@ -18,7 +20,7 @@
     <div class="mb-3">
         <label class="form-label">
             Ingredient:
-            <InputText @bind-Value="model.Ingredient" />
+            <InputText @bind-Value="model.Name" />
         </label>
     </div>
 
@@ -65,7 +67,7 @@
 
  @* Logic code block *@
 @code {
-    private Ingredients model = new();
+    private Ingredient model = new();
     private void HandleValidSubmit()
     {
         IngredientService.AddIngredient(model);

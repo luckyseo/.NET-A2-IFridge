@@ -1,9 +1,9 @@
-<h2>Recipe</h2>
+@* <h2>Recipe</h2> *@
 
 
 @* search bar- find a recipe *@
 
-<input class="form-control" placeholder="Search by recipe name or ingredient..." @bind="searchTerm" />
+@* <input class="form-control" placeholder="Search by recipe name or ingredient..." @bind="searchTerm" />
 
 <select class="form-select" @bind="selectedCategory">
     <option value="">All</option>
@@ -11,7 +11,7 @@
     {
         <option value="@category">@category</option>
     }
-</select>
+</select> *@
 
 @* Suggest based on available ingredients *@
 @* Fetch some from recipe model then match based on available ingredient *@
@@ -19,7 +19,7 @@
 
 
 @* Display recipes as card *@
-<div class="recipe-grid">
+@* <div class="recipe-grid">
     @if (!FilteredRecipes.Any())
     {
         <p class="errorMsg">No recipes found.</p>
@@ -42,7 +42,7 @@
             <p>@recipe.Instructions</p>
         </div>
     }
-</div>
+</div> *@
 
 <style>
     .recipe-grid {
@@ -89,7 +89,7 @@
     }
 </style>
 
-
+@* 
 @code {
     private string searchTerm = "";
     private string selectedCategory = "";
@@ -101,4 +101,4 @@
     &&
     r.Category == selectedCategory
     );
-}
+} *@

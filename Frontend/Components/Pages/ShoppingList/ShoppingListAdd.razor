@@ -1,11 +1,12 @@
-@using Frontend.Service;
+
 @page "/shoppinglist/add"
 @inject ShoppingListService ListService
 @inject NavigationManager Navigation
 @using Frontend.Components.Shared
+@using Frontend.Service
+@using Frontend.Models
 
-
-<Navbar />
+@* <Navbar />
 
 <h3>Make a list</h3>
 
@@ -34,7 +35,7 @@
 </EditForm>
 
 @code {
-    private ShoppingList model = new();
+    private ShoppingListModel model = new();
     private string items = "";
 
     private void HandleValidSubmit()
@@ -49,4 +50,4 @@
         model = new();
         items = "";
     }
-}
+} *@

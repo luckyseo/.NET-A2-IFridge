@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Frontend.Services;
 using Frontend.Service;
-
+using Frontend.Models;
 //resgister service here 
 // 
 
@@ -15,17 +14,18 @@ namespace Frontend
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            //builder.Services.AddRazorComponents()
-            //   .AddInteractiveServerComponents();
+            builder.Services.AddRazorComponents()
+               .AddInteractiveServerComponents();
 
 
             //Testing the front end 
 
             // Add services to the container.
-            builder.Services.AddRazorPages();
-            builder.Services.AddServerSideBlazor();
+            // builder.Service.AddRazorPages();
+            // builder.Service.AddServerSideBlazor();
 
             // Register your services here:
+            builder.Services.AddScoped<LoginService>();
             builder.Services.AddSingleton<ShoppingListService>();
             builder.Services.AddSingleton<IngredientService>();
 
@@ -44,7 +44,7 @@ namespace Frontend
             app.UseStaticFiles();
             app.UseAntiforgery();
 
-            app.MapRazorComponents<App>()
+            app.MapRazorComponents<Frontend.Components.App>()
                 .AddInteractiveServerRenderMode();
 
             app.Run();
