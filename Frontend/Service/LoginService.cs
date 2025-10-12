@@ -44,7 +44,7 @@ public class LoginService
     {
         try
         {
-            List<string>? allergyListm = null;
+            List<string>? allergyList = null;
             if (!string.IsNullOrWhiteSpace(model.allergies))
             {
                 allergyList = model.allergies.Split(','
@@ -86,9 +86,11 @@ public class LoginService
                 var result = await response.Content.ReadFromJsonAsync<CheckIdResponse>();
                 return result?.exists ?? false;
             }
+            return false;
         }
-        catch
+        catch(Exception e)
         {
+            Console.WriteLine($"CheckId Error: {e.Message}");
             return false;
         }
     }

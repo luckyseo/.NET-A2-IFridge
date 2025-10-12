@@ -7,46 +7,46 @@
 @rendermode InteractiveServer
 
 <h3>Sign Up to IFridge</h3>
-
-<EditForm Model="@model" OnValidSubmit="HandleRegister" class="container">
+@* FromName - .NET 8.0 requirement *@
+<EditForm FormName="registerForm" Model="@model" OnValidSubmit="HandleRegister" class="container">
     <DataAnnotationsValidator />
     <div>
-    <labal class="form-label">First Name</labal>
-    <InputText @bind-Value="model.firstName" class="form-control"/>
-    <ValidationMessage For="@(()=>model.FristName)"/>
+        <label class="form-label">First Name</label>
+        <InputText @bind-Value="model.firstName" class="form-control"/>
+        <ValidationMessage For="@(()=>model.firstName)"/>
     </div>
     <div>
-    <labal class="form-label">Last Name</labal>
-    <InputText @bind-Value="model.lastName" class="form-control"/>
-     <ValidationMessage For="@(()=>model.lastName)"/>
+        <label class="form-label">Last Name</label>
+        <InputText @bind-Value="model.lastName" class="form-control"/>
+        <ValidationMessage For="@(()=>model.lastName)"/>
     </div>
     <div>
-    <labal class="form-label">Preferred Name</labal>
-    <InputText @bind-Value="model.preferredName" class="form-control"/>
+        <label class="form-label">Preferred Name</label>
+        <InputText @bind-Value="model.preferredName" class="form-control"/>
     </div>
     <div>
-    <label class="form-label">Allergies</label>
-    <InputText @bind-Value="model.allergies" class="form-control" placeholder="e.g. peanut, diary"/>
+        <label class="form-label">Allergies</label>
+        <InputText @bind-Value="model.allergies" class="form-control" placeholder="e.g. peanut, diary"/>
     </div>
     <div>
-    <label class="form-label">ID</label>
-    <div class="input-group">
-        <InputText @bind-Value="model.id" @onblur="CheckIdAvailability"class="form-control"/>
-        <button type=button @onclick="CheckIdAvailability disabled" @isCheckingId">
-        @if(isCheckingId){
-            <span>Checking ...</span>
-        }
-        else{
-            <span>Check</span>
-        }
-        </button>
-  
+        <label class="form-label">ID</label>
+        <div class="input-group">
+            <InputText @bind-Value="model.id" @onblur="CheckIdAvailability"class="form-control"/>
+            <button type=button @onclick="CheckIdAvailability" disabled= "@isCheckingId">
+            @if(isCheckingId){
+                <span>Checking ...</span>
+            }
+            else{
+                <span>Check</span>
+            }
+            </button>
+        </div>
+        <ValidationMessage For="@(()=>model.id)"/>
+    </div>
     <div>
-     <ValidationMessage For="@(()=>model.id)"/>
-
-    <labal class="form-label">PW</labal>
-    <InputText @bind-Value="model.pw" class="form-control"/>
-     <ValidationMessage For="@(()=>model.pw)"/>
+        <label class="form-label">PW</label>
+        <InputText @bind-Value="model.pw" class="form-control"/>
+        <ValidationMessage For="@(()=>model.pw)"/>
     </div>
     <button type="submit" class="btn btn-primary"">Sign Up</button>
 </EditForm>
@@ -55,7 +55,8 @@
 </div>
 
 @code {
-    private RegisterModel model = new();
+     [SupplyParameterFromForm]
+    private RegisterModel model{get;set;} = new();
     private string err = string.Empty;
 
     private bool isCheckingId=false;
@@ -64,18 +65,18 @@
 
     private async Task CheckIdAvailability(){
         if(string.IsNullOrWhiteSpace(model.id)){
-            idCheckMessage =string.Empty;
+            idCheckingMessage =string.Empty;
             return;
         }
         isCheckingId = true;
         idCheckingMessage = "Checking availbilty";
-        idExists await loginService.CheckIdExistsAsync(model.id);
+        idExists = await loginService.CheckIdExistsAsync(model.id);
 
         if(idExists){
-            idCheckMessage="Already exists";
+            idCheckingMessage="Already exists";
         }
         else{
-            idCheckMessage="Available";
+            idCheckingMessage="Available";
         }
         isCheckingId=false;
     }

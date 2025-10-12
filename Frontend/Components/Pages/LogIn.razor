@@ -3,27 +3,29 @@
 @inject NavigationManager Navigation
 @using Frontend.Models
 @using Frontend.Service
+@rendermode InteractiveServer
 
 <h3>Welcome to IFridge</h3>
 
-<EditForm Model="@model" OnValidSubmit="HandleLogin" class="container">
+<EditForm FormName="loginForm" Model="@model" OnValidSubmit="HandleLogin">
     <DataAnnotationsValidator />
     <div>
     <label class="form-label">ID</label>
     <InputText @bind-Value="model.id" class="form-control"/>
     </div>
     <div>
-    <labal class="form-label">PW</labal>
-    <InputText @bind-Value="model.pw" class="form-control"/>
+    <label class="form-label">PW</label>
+    <InputText type="password" @bind-Value="model.pw" class="form-control"/>
     </div>
-    <button type="submit" class="btn btn-primary"">log in</button>
+    <button type="submit" class="btn btn-primary">log in</button>
 </EditForm>
     <div>
     <h4>New Here?</h4>
     <a href="/register">Sign-Up</a>
     </div>
 @code {
-    private LoginModel model = new();
+    [SupplyParameterFromForm]
+    private LoginModel model{get;set;} = new();
     private string err = string.Empty;
     private async Task HandleLogin()
     {
