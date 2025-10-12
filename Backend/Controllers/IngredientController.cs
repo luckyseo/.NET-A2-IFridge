@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Backend.Domain.Entities; 
+using Backend.Domain.Entities;
+using Backend.AppData;
 
 namespace Backend.Controllers;
 
@@ -10,7 +11,7 @@ namespace Backend.Controllers;
 //inherit from the ControllerBase class and its methods
 public class IngredientController : ControllerBase
 {
-    private readonly AppDBContext _context;
+    private readonly AppDbContext _context;
 
     public IngredientController(AppDbContext context)
     {
@@ -20,18 +21,18 @@ public class IngredientController : ControllerBase
     //List all ingredients
     //GET / api / ingredient
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Ingredients>>> GetAll()
+    public async Task<ActionResult<IEnumerable<Ingredient>>> GetAll()
     {
-        var ingredients = await _context.Ingredients.ToListAsync();
+        var ingredients = await _context.Ingredient.ToListAsync();
         return Ok(ingredients);
     }
 
     //Get an ingredient based on id
     //GET /api/ingredient/{id} 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Ingredients>> GetIngredientById(int id)
+    public async Task<ActionResult<Ingredient>> GetIngredientById(int id)
     {
-        var ingredient = await _context.Ingredients.FindAsync(id);
+        var ingredient = await _context.Ingredient.FindAsync(id);
         if (ingredient == null)
             return NotFound();
         else

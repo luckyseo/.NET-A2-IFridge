@@ -11,7 +11,7 @@ public class AppDbContext:DbContext {
     {}
     public DbSet<Ingredient> Ingredients { get; set; }
     public DbSet<ShoppingList> ShoppingLists { get; set; }
-    public DbSet<ShoppingListItems> ShoppingListItems { get; set; }
+   public DbSet<ShoppingListItems> ShoppingListItems { get; set; }
     public DbSet<Recipe> Recipes { get; set; }
     public DbSet<User> Users { get; set; }
     

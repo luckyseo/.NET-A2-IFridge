@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend.Domain.Entities;
+using Backend.AppData;
 
 namespace Backend.Controllers;
 
@@ -8,7 +9,7 @@ namespace Backend.Controllers;
 [Route("api/[controller]")]
 public class ShoppingListController : ControllerBase
 {
-    private readonly AppDBContext _context;
+    private readonly AppDbContext _context;
 
     public ShoppingListController(AppDbContext context)
     {
