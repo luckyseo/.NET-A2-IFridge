@@ -5,16 +5,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.AppData;
 
-public class AppDbContext:DbContext {
+public class AppDbContext : DbContext
+{
     //make connection
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {}
+    { }
     public DbSet<Ingredient> Ingredients { get; set; }
     public DbSet<ShoppingList> ShoppingLists { get; set; }
-   public DbSet<ShoppingListItems> ShoppingListItems { get; set; }
     public DbSet<Recipe> Recipes { get; set; }
     public DbSet<User> Users { get; set; }
-    
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -40,6 +40,28 @@ public class AppDbContext:DbContext {
                 );
         });
 
+
+        //Configure Inrgedient and shopping list
+
+        modelBuilder.Entity<Ingredient>(entity =>
+        {
+            entity.HasKey(i => i.Id);
+            entity.Property(i => i.Name).IsRequired().HasMaxLength(50);
+            entity.Property(i => i.Quantity);
+            entity.Property(i => i.OpenedDate).IsRequired();
+            entity.Property(i => i.ExpiredDate).IsRequired();
+            entity.Property(i => i.Category).HasConversion<string>().IsRequired().HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<ShoppingList>(entity =>
+          {
+              entity.HasKey(s => s.Id);
+              entity.Property(s => s.Title).IsRequired().HasMaxLength(50);
+              entity.Property(s => s.DateCreated).IsRequired();
+              entity.Property(s => s.Items).HasColumnType("TEXT");
+          });
+
+
         // Configure your entities here if needed
         // modelBuilder.Entity<Item>(entity =>
         // {
@@ -48,7 +70,7 @@ public class AppDbContext:DbContext {
         //     entity.Property(e => e.Description).HasMaxLength(500);
         // });
 
-       // modelBuilder.Entity<ShoppingList>().HasForeignKey(i => i.ShoppingListId);
-        
+        // modelBuilder.Entity<ShoppingList>().HasForeignKey(i => i.ShoppingListId);
+
     }
 }
