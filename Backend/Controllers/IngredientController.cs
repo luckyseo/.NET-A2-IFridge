@@ -23,7 +23,7 @@ public class IngredientController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Ingredient>>> GetAll()
     {
-        var ingredients = await _context.Ingredient.ToListAsync();
+        var ingredients = await _context.Ingredients.ToListAsync();
         return Ok(ingredients);
     }
 
@@ -32,11 +32,15 @@ public class IngredientController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Ingredient>> GetIngredientById(int id)
     {
-        var ingredient = await _context.Ingredient.FindAsync(id);
+        var ingredient = await _context.Ingredients.FindAsync(id);
         if (ingredient == null)
+        {
             return NotFound();
+        }
         else
+        {
             return Ok(ingredient);
+        }
     }
 
     //add new ingredient when entering the add form
@@ -64,14 +68,16 @@ public class IngredientController : ControllerBase
         if (existingIngredient == null)
             return NotFound();
 
-            //Update data
+        //Update data
         existingIngredient.Name = updatedIngredient.Name;
         existingIngredient.Quantity = updatedIngredient.Quantity;
-        existingIngredient.Category = updatedIngredient.Category; 
-        existingIngredient.OpenedDate = updateIngrdient.OpenedDate; 
+        existingIngredient.Category = updatedIngredient.Category;
+        existingIngredient.OpenedDate = updatedIngredient.OpenedDate;
         existingIngredient.ExpiredDate = updatedIngredient.ExpiredDate;
 
         await _context.SaveChangesAsync();
+
+        return Ok(updatedIngredient);
     }
 
     //remove ingredient 
@@ -85,10 +91,12 @@ public class IngredientController : ControllerBase
 
         _context.Ingredients.Remove(ingredient);
         await _context.SaveChangesAsync();
+
+        return NoContent();
     }
 
 }
 
 
 //References:
-//dotnet-bot. (2025). ControllerBase Class (Microsoft.AspNetCore.Mvc). Microsoft.com. https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.controllerbase?view=aspnetcore-9.0
+//dotnet-bot. (2025). ControllerBase Class (Microsoft.AspNetCore.Mvc). Microsoft.com. https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.controllerbase?view=aspnetcore-9.0F

@@ -1,10 +1,10 @@
-namespace Backend.Services;
+// namespace Backend.Services;
 
-using Backend.Domain.Entities;
-using Backend.Repositories;
+// using Backend.Domain.Entities;
+// using Backend.Repositories;
 
-public class ItemService : IItemService
-{
+// public class ItemService : IItemService
+// {
 	// private readonly IItemRepository _repository;
 
 	// public ItemService(IItemRepository repository)
@@ -21,4 +21,3 @@ public class ItemService : IItemService
 	// public Task UpdateItemAsync(Item item) => _repository.UpdateAsync(item);
 
 	// public Task DeleteItemAsync(int id) => _repository.DeleteAsync(id);
-}

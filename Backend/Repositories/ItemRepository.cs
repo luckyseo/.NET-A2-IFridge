@@ -1,12 +1,12 @@
-namespace Backend.Repositories;
+// namespace Backend.Repositories;
 
-using Backend.AppData;
-using Backend.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+// using Backend.AppData;
+// using Backend.Domain.Entities;
+// using Microsoft.EntityFrameworkCore;
 
-public class ItemRepository
-{
-    private readonly AppDbContext _context;
+// public class ItemRepository
+// {
+//     private readonly AppDbContext _context;
 
     // public ItemRepository(AppDbContext context)
     // {
@@ -45,4 +45,3 @@ public class ItemRepository
     //         await _context.SaveChangesAsync();
     //     }
     // }
-}

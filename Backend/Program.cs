@@ -1,6 +1,6 @@
 using Backend.AppData;
-using Backend.Services;
-using Backend.Repositories;
+// using Backend.Services;
+// using Backend.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend
@@ -13,10 +13,6 @@ namespace Backend
 
             builder.Services.AddDbContext<AppDbContext>(opt =>
                 opt.UseSqlite(builder.Configuration.GetConnectionString("Default")));
-
-            //register db here
-            builder.Services.AddDbContext<AppDbContext>(FileOptions => FileOptions.UseSqlite("Data Source= smart fridge.db"));
-
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();

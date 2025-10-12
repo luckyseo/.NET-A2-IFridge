@@ -56,13 +56,15 @@ public class ShoppingListController : ControllerBase
         var existingList = await _context.ShoppingLists.FindAsync(id);
 
         if (existingList == null)
+        {
             return NotFound();
+        }
 
         // Update data
-        existing.Title = updatedList.Title;
-        existing.ItemsText = updatedList.ItemsText;
-
+        existingList.Title = updatedList.Title;
+        existingList.Items = updatedList.Items;
         await _context.SaveChangesAsync();
+        return Ok(existingList); //success
     }
 
     //delete list 
@@ -70,10 +72,14 @@ public class ShoppingListController : ControllerBase
     public async Task<IActionResult> Delete(int id)
     {
         var shoppingList = await _context.ShoppingLists.FindAsync(id);
-        if (shoppingList == null) return NotFound();
+        if (shoppingList == null)
+        {
+            return NotFound();
+        }
         //remove 
-        _context.ShoppingLists.Remove(shoppinglist);
+        _context.ShoppingLists.Remove(shoppingList);
         await _context.SaveChangesAsync();
+        return NoContent();
     }
 
 }

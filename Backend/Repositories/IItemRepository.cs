@@ -1,6 +1,6 @@
-namespace Backend.Repositories;
+// namespace Backend.Repositories;
 
-using Backend.Domain.Entities;
+// using Backend.Domain.Entities;
 
 // public interface IItemRepository
 // {
