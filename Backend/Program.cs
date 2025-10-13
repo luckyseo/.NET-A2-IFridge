@@ -14,9 +14,6 @@ namespace Backend
             builder.Services.AddDbContext<AppDbContext>(opt =>
                 opt.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
             // Add services to the container.
 
             builder.Services.AddControllers();
