@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend.Domain.Entities;
-using Backend.AppData;
+using Backend.Data;
 
 namespace Backend.Controllers;
 

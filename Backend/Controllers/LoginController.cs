@@ -4,7 +4,7 @@ using System.IO.Pipelines;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
-using Backend.AppData;
+using Backend.Data;
 using Backend.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,9 +21,9 @@ public class LoginController : ControllerBase
         _context = context;
     }
     [HttpGet("check/{id}")]
-    public async Task<ActionResult> CheckIdExists(string id)
+    public async Task<ActionResult> CheckIdExists(string loginId)
     {
-        var exists = await _context.Users.AnyAsync(u => u.id == id);
+        var exists = await _context.Users.AnyAsync(u => u.loginId == loginId);
 
         return Ok(new { exitst = exists });
     }
@@ -31,7 +31,7 @@ public class LoginController : ControllerBase
     [HttpPost("auth")] //login/auth
     public async Task<ActionResult<User>> Login([FromBody] LoginRequest request)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.id == request.id && u.pw == request.pw);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.loginId == request.loginId && u.pw == request.pw);
 
         if (user == null)
         {
@@ -51,14 +51,14 @@ public class LoginController : ControllerBase
     [HttpPost("register")] //login/register
     public async Task<ActionResult<User>> Register([FromBody] RegisterRequest request)
     {
-        if (await _context.Users.AnyAsync(u => u.id == request.id))
+        if (await _context.Users.AnyAsync(u => u.loginId == request.loginId))
         {
             return BadRequest(new { message = "Already Exist Id" });
         }
 
         var user = new User
         {
-            id = request.id,
+            loginId = request.loginId,
             pw = request.pw,
             firstName = request.firstName,
             lastName = request.lastName,
@@ -78,7 +78,7 @@ public class LoginController : ControllerBase
     //Instead of DTO
     public class LoginRequest
     {
-        public string id { get; set; } = string.Empty;
+        public string loginId { get; set; } = string.Empty;
         public string pw { get; set; } = string.Empty;
     }
     public class RegisterRequest
@@ -87,7 +87,7 @@ public class LoginController : ControllerBase
         public string lastName { get; set; } = string.Empty;
         public string preferredName { get; set; } = string.Empty;
 
-        public string id { get; set; } = string.Empty;
+        public string loginId { get; set; } = string.Empty;
 
         public string pw { get; set; } = string.Empty;
         public List<string>? Allergies { get; set; }

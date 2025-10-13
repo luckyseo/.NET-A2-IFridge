@@ -3,17 +3,19 @@ using System.Runtime.CompilerServices;
 using Backend.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Backend.AppData;
+namespace Backend.Data;
 
 public class AppDbContext : DbContext
 {
     //make connection
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    { }
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)  { }
+
     public DbSet<Ingredient> Ingredients { get; set; }
     public DbSet<ShoppingList> ShoppingLists { get; set; }
     public DbSet<Recipe> Recipes { get; set; }
     public DbSet<User> Users { get; set; }
+    
+    
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,7 +34,7 @@ public class AppDbContext : DbContext
             entity.Property(e => e.firstName).IsRequired().HasMaxLength(50);
             entity.Property(e => e.lastName).IsRequired().HasMaxLength(50);
             entity.Property(e => e.preferredName);
-            entity.Property(e => e.id).IsRequired();
+            entity.Property(e => e.loginId).IsRequired();
             entity.Property(e => e.pw).IsRequired();
             entity.Property(e => e.Allergies).HasConversion(
                 Item => string.Join(',', Item),
