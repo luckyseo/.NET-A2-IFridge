@@ -1,15 +1,15 @@
 //Using this as a psedue code to for controller.cs
 
-// using Backend.Domain.Entities;
-// using Backend.Services;
-// using Microsoft.AspNetCore.Mvc;
+using Backend.Domain.Entities;
+//using Backend.Services;
+using Microsoft.AspNetCore.Mvc;
 
-// namespace Backend.Controllers;
+namespace Backend.Controllers;
 
 // [ApiController]
 // [Route("api/[controller]")]
 // public class ItemsController : ControllerBase
-{
+//{
     // private readonly IItemService _itemService;
 
     // public ItemsController(IItemService itemService)
@@ -57,4 +57,4 @@
     //     await _itemService.DeleteItemAsync(id);
     //     return NoContent();
     // }
-}
+//}
