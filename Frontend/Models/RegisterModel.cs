@@ -5,7 +5,7 @@ namespace Frontend.Models;
 public class RegisterModel
 {
     [Required(ErrorMessage ="This is Required Field")]
-    public string id { get; set; }
+    public string loginId { get; set; }
     [Required(ErrorMessage ="This is Required Field")]
     public string pw { get; set; }
     [Required(ErrorMessage ="This is Required Field")]

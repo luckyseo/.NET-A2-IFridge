@@ -106,9 +106,9 @@ public class LoginService
     //DTO
     public class UserInfo
     {
-        public string loginId { get; set; }
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        public string preferredName{ get; set; }
+        public string loginId { get; set; } = string.Empty;
+        public string firstName { get; set; } = string.Empty;
+        public string lastName { get; set; } = string.Empty;
+        public string preferredName{ get; set; } = string.Empty;
     }
 }
