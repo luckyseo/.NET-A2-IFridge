@@ -20,7 +20,7 @@ public class LoginController : ControllerBase
     {
         _context = context;
     }
-    [HttpGet("check/{loginId}")]
+    [HttpGet("check/{loginId}")] //This is for checking if the ID exists
     public async Task<ActionResult> CheckIdExists(string loginId)
     {
         var exists = await _context.Users.AnyAsync(u => u.loginId == loginId);
@@ -28,7 +28,7 @@ public class LoginController : ControllerBase
         return Ok(new { exists = exists });
     }
 
-    [HttpPost("auth")] //login/auth
+    [HttpPost("auth")] //login/auth When user tries to log in
     public async Task<ActionResult<User>> Login([FromBody] LoginRequest request)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.loginId == request.loginId && u.pw == request.pw);
@@ -48,7 +48,7 @@ public class LoginController : ControllerBase
         });
     }
 
-    [HttpPost("register")] //login/register
+    [HttpPost("register")] //login/register when user tries to register (new user!)
     public async Task<ActionResult<User>> Register([FromBody] RegisterRequest request)
     {
         if (await _context.Users.AnyAsync(u => u.loginId == request.loginId))

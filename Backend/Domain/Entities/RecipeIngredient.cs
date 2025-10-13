@@ -3,7 +3,7 @@ namespace Backend.Domain.Entities
 {
     public class RecipeIngredient
     {
-        public int Id { get; set; }
+        public int Id { get; set; } //PK
 
         public int RecipeId { get; set; }
         public Recipe Recipe { get; set; }
