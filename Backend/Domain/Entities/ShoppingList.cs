@@ -9,7 +9,7 @@ namespace Backend.Domain.Entities
 
         public DateTime DateCreated { get; set; } = DateTime.Now;
 
-        public ArrayList<Item> Items { get; set; } = new();
+        public List<Item> Items { get; set; } = new();
         //store as string, ask user to inut this in a textarea then format as bullet point in frontend 
     
         //FK

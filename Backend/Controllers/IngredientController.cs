@@ -62,12 +62,12 @@ public class IngredientController : ControllerBase
         var thresholdDate = today.AddDays(3);
 
         var expiredIngredients = _context.Ingredients
-        .Where(e => e.ExpiredDate >= today && e.ExpiredDate <= thresholdDate)
+        .Where(e => e.ExpiredDate.HasValue && e.ExpiredDate >= today && e.ExpiredDate <= thresholdDate)
         .Select(e => new IngredientDto
         {
             Id = e.Id,
             Name = e.Name,
-            ExpiredDate = e.ExpiredDate
+            ExpiredDate = e.ExpiredDate.Value
         });
         return expiredIngredients;
 
