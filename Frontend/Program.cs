@@ -30,7 +30,7 @@ namespace Frontend
                 sp => {
                 var http = new HttpClient
                 {
-                    BaseAddress = new Uri("https://localhost:7267/") // Backend URL
+                    BaseAddress = new Uri("http://localhost:5037") // Backend URL
                 };
                 return new LoginService(http);
                 }
@@ -48,7 +48,7 @@ namespace Frontend
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseStaticFiles();
             app.UseAntiforgery();
