@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Backend.Domain.Entities;
 using Backend.Data;
+using System.Data.Common;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Backend.Controllers;
 
@@ -42,6 +44,35 @@ public class IngredientController : ControllerBase
             return Ok(ingredient);
         }
     }
+
+    //Convert entity to DTO IngredientDto -> for expiration notificaiton
+    //just general details
+    public IQueryable<IngredientDto> GetExpiredIngredients()
+    {
+        // var expiredIngredients = from e in expiredIngredients
+        //                          select new IngredientDto()
+        //                          {
+        //                              Id = e.Id,
+        //                              Name = e.Name,
+        //                              ExpiredDate = e.ExpiredDate
+        //                          };
+
+        //add conditions: expire today and within 3 days
+        var today = DateTime.Today;
+        var thresholdDate = today.AddDays(3);
+
+        var expiredIngredients = _context.Ingredients
+        .Where(e => e.ExpiredDate <= 3)
+        .Select(e => new IngredientDto
+        {
+            Id = e.Id,
+            Name = e.Name,
+            ExpiredDate = e.ExpiredDate
+        });
+        return expiredIngredients;
+
+    }
+
 
     //add new ingredient when entering the add form
     //POST /api/ingredient 
