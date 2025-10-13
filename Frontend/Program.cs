@@ -26,7 +26,15 @@ namespace Frontend
 
             builder.Services.AddHttpClient();
             // Register your services here:
-            builder.Services.AddScoped<LoginService>();
+            builder.Services.AddScoped<LoginService>(
+                sp => {
+                var http = new HttpClient
+                {
+                    BaseAddress = new Uri("https://localhost:7267/") // Backend URL
+                };
+                return new LoginService(http);
+                }
+            );
             builder.Services.AddSingleton<ShoppingListService>();
             builder.Services.AddSingleton<IngredientService>();
 
