@@ -19,7 +19,7 @@ namespace Backend
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddCors(o => o.AddPolicy("blazor", p =>
-                p.WithOrigins("https://localhost:5173").AllowAnyHeader().AllowCredentials().AllowAnyMethod()));
+                p.WithOrigins("https://localhost:5181").AllowAnyHeader().AllowCredentials().AllowAnyMethod()));
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
