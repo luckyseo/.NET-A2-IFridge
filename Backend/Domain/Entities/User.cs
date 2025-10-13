@@ -11,4 +11,5 @@ public class User
     public string pw { get; set; }
 
     public List<String> Allergies { get; set; } = new List<String>();
+
 }
