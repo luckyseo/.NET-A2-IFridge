@@ -31,7 +31,7 @@
     <div>
         <label class="form-label">ID</label>
         <div class="input-group">
-            <InputText @bind-Value="model.id" @onblur="CheckIdAvailability"class="form-control"/>
+            <InputText @bind-Value="model.loginId" @onblur="CheckIdAvailability"class="form-control"/>
             <button type=button @onclick="CheckIdAvailability" disabled= "@isCheckingId">
             @if(isCheckingId){
                 <span>Checking ...</span>
@@ -41,7 +41,7 @@
             }
             </button>
         </div>
-        <ValidationMessage For="@(()=>model.id)"/>
+        <ValidationMessage For="@(()=>model.loginId)"/>
     </div>
     <div>
         <label class="form-label">PW</label>
@@ -64,13 +64,13 @@
     private string idCheckingMessage = string.Empty;
 
     private async Task CheckIdAvailability(){
-        if(string.IsNullOrWhiteSpace(model.id)){
+        if(string.IsNullOrWhiteSpace(model.loginId)){
             idCheckingMessage =string.Empty;
             return;
         }
         isCheckingId = true;
         idCheckingMessage = "Checking availbilty";
-        idExists = await loginService.CheckIdExistsAsync(model.id);
+        idExists = await loginService.CheckIdExistsAsync(model.loginId);
 
         if(idExists){
             idCheckingMessage="Already exists";

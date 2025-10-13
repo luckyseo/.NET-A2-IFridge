@@ -23,7 +23,7 @@ public class LoginService
     {
         try
         {
-            var response = await _httpClient.PostAsJsonAsync("login/auth", new { id = model.id, pw = model.pw });
+            var response = await _httpClient.PostAsJsonAsync("login/auth", new { loginId = model.loginId, pw = model.pw });
             
             if (response.IsSuccessStatusCode)
             {
@@ -56,7 +56,7 @@ public class LoginService
                 firstName = model.firstName,
                 lastName = model.lastName,
                 preferredName = model.preferredName,
-                id = model.id,
+                loginId = model.loginId,
                 pw = model.pw,
                 Allergies = allergyList
             });
@@ -76,11 +76,11 @@ public class LoginService
         }
     }
 
-    public async Task<bool> CheckIdExistsAsync(string id)
+    public async Task<bool> CheckIdExistsAsync(string loginId)
     {
         try
         {
-            var response = await _httpClient.GetAsync($"login/check/{id}");
+            var response = await _httpClient.GetAsync($"login/check/{loginId}");
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadFromJsonAsync<CheckIdResponse>();
@@ -106,7 +106,7 @@ public class LoginService
     //DTO
     public class UserInfo
     {
-        public string id { get; set; }
+        public string loginId { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string preferredName{ get; set; }

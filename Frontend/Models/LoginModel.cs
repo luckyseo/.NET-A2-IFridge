@@ -5,7 +5,7 @@ namespace Frontend.Models;
 public class LoginModel
 {
     [Required]
-    public string id { get; set; }
+    public string loginId { get; set; }
     [Required]
     public string pw{ get; set; }
 }
