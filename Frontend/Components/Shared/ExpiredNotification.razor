@@ -1,0 +1,19 @@
+@inject IngredientService IngredientService
+
+
+@* inject service to retrieve data  *@
+@* expiredIngredients is the list *@
+
+@if(expiredIngredients is null){
+    <p>Loading notifications...</p>
+} else {
+    <div class=""> 
+    <ul> 
+    @foreach (var ingredient in expiredIngredients){
+        <li>
+        @ingredient.Name - expires on @ingredient.ExpiredDate
+        </li>
+    }
+    </ul>
+    </div>
+}

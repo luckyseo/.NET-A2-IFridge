@@ -10,4 +10,5 @@ namespace Frontend.Models
         public DateTime OpenedDate { get; set; }
         public DateTime ExpiredDate { get; set; }
     }
+
 }
