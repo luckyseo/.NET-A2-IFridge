@@ -71,10 +71,18 @@
  @* Logic code block *@
 @code {
     private Ingredient model = new();
-    private void HandleValidSubmit()
+    private string err = string.Empty;
+
+    private async Task HandleValidSubmit()
     {
         //IngredientService.AddIngredient(model);
-        Navigation.NavigateTo("/ingredients/view");
+        Navigation.NavigateTo("/");
+        var success = await IngredientService.AddIngredient(model);
+        if(success){
+            Navigation.NavigateTo("/");
+        }else{
+            err = "Invalid input. Please try again.";
+        }
     }
 
     private void ClearForm() => model = new();
@@ -88,6 +96,8 @@
 
     }
     private List<Ingredient> Expired => ingredients.Where(i => i.ExpiredDate < DateTime.Now).ToList();
+
+
 
 }
 

@@ -29,7 +29,33 @@ namespace Frontend.Service
 
         //Edit later for available ingredients
 
+        public async Task<bool> AddIngredient(Ingredient model)
+        {
+        try
+        {
+        
+            var response = await _httpClient.PostAsJsonAsync("api/ingredient", new
+            {
+                Name = model.Name,
+                Quantity = model.Quantity,
+                Category = model.Category,
+                OpenedDate = model.OpenedDate,
+                ExpiredDate = model.ExpiredDate
+            });
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
 
+            return false;
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"add ingredient Error: {e.Message}");
+            return false;
+        }
+        }
         // private List<Ingredient> _ingredients = new();
         // public void AddIngredient(Ingredient ingredient)
         // {
