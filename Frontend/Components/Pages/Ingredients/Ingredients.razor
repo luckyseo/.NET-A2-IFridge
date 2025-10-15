@@ -3,27 +3,27 @@
 @using Frontend.Service
 @using Frontend.Components.Pages
 @using Frontend.Components.Shared
+@inject LoginService LoginService
+@inject IngredientService IngredientService
+@rendermode InteractiveServer
 
 
 <Navbar />
 <h3>Welcome to IFridge</h3>
 <div class="btn-group"> 
-<button class="btn" @onclick="@(() => OnButtonClicked("View available ingredients"))">View available ingredients</button>
-<button class="btn" @onclick="@(() => OnButtonClicked("Add new ingredient"))">Add new ingredient</button>
+<button class="btn" @onclick="@(() => Navigation.NavigateTo("/"))">View available ingredients</button>
+<button class="btn" @onclick="@(() => Navigation.NavigateTo("/ingredients/add"))">Add new ingredient</button>
 </div>
 
 @code {
+    private List<Ingredient> ingredients = new List<Ingredient>();
+    private async Task LoadIngredients(){
 
-    private void OnButtonClicked(string btn)
-    {
-        switch (btn)
-        {
-            case "View available ingredients":
-                Navigation.NavigateTo("/ingredients/view");
-                break;
-            case "Add new ingredient":
-                Navigation.NavigateTo("/ingredients/add");
-                break;
-        }
+    int userId = LoginService.GetUserId();
+    ingredients = await IngredientService.GetAllIngredients();
+
     }
+    private List<Ingredient> Expired => ingredients.Where(i => i.ExpiredDate < DateTime.Now).ToList();
+
+
 }

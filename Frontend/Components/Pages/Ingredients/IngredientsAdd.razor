@@ -1,6 +1,8 @@
 @page "/ingredients/add"
 @inject NavigationManager Navigation
 @inject IngredientService IngredientService
+@inject LoginService LoginService
+
 @using Frontend.Components
 @using Frontend.Components.Shared
 @using Frontend.Service
@@ -76,6 +78,17 @@
     }
 
     private void ClearForm() => model = new();
+
+
+    private List<Ingredient> ingredients = new List<Ingredient>();
+    private async Task LoadIngredients(){
+
+    int userId = LoginService.GetUserId();
+    ingredients = await IngredientService.GetAllIngredients();
+
+    }
+    private List<Ingredient> Expired => ingredients.Where(i => i.ExpiredDate < DateTime.Now).ToList();
+
 }
 
 @* References *@
