@@ -1,6 +1,5 @@
 using Frontend.Models;
 
-
 namespace Frontend.Service
 {
     public class IngredientService
@@ -16,9 +15,9 @@ namespace Frontend.Service
         }
 
         //get the expiring ingredient return a list
-        public async Task<List<IngredientDto>> GetExpiring()
+        public async Task<List<Ingredient>> GetExpiring()
         {
-            return await _httpClient.GetFromJsonAsync<List<IngredientDto>>("https://localhost:5001/api/ingredients/expired");
+            return await _httpClient.GetFromJsonAsync<List<Ingredient>>("https://localhost:5001/api/ingredients/expired");
         }
 
 

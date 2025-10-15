@@ -17,3 +17,12 @@
     </ul>
     </div>
 }
+
+@code{
+    private List<Ingredient> expiredIngredients;
+
+    protected override async Task OnInitializedAsync()
+    {
+        expiredIngredients = await IngredientService.GetExpiring();
+    }
+}
