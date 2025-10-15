@@ -59,7 +59,7 @@ public class AppDbContext : DbContext
               entity.HasKey(s => s.Id);
               entity.Property(s => s.Title).IsRequired().HasMaxLength(50);
               entity.Property(s => s.DateCreated).IsRequired();
-              entity.Property(s => s.Items).HasColumnType("TEXT");
+             
           });
 
 
