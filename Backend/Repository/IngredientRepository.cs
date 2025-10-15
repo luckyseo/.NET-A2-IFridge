@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Backend.Domain.Entities;
 using Backend.Interface;
 using System.Diagnostics.Contracts;
+using Backend.Data; 
+//solve connection with appdbcontext 
 
 namespace Backend.Repository;
 

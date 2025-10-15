@@ -4,7 +4,7 @@ using Backend.Domain.Entities;
 using Backend.Interface;
 using System.Diagnostics.Contracts;
 
-namespace Backend.Repository;
+namespace Backend.Services;
 
 public class IngredientService
 {
@@ -29,7 +29,7 @@ public class IngredientService
         var today = DateTime.Today;
         var threshold = today.AddDays(3);
 
-        var expired = await _repo.GetExpiredAsync(today, threshold);
+        var expired = await _repo.GetExpired(today, threshold);
         return expired
             .Select(e => new IngredientDto
             {

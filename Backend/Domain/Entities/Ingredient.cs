@@ -1,5 +1,4 @@
 using System.Dynamic;
-
 namespace Backend.Domain.Entities;
 
 public class Ingredient

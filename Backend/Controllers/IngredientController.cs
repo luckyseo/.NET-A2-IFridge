@@ -4,7 +4,7 @@ using Backend.Domain.Entities;
 using Backend.Data;
 using System.Data.Common;
 using System.Reflection.Metadata.Ecma335;
-using Backend.Service; 
+using Backend.Services;
 
 namespace Backend.Controllers;
 
@@ -26,7 +26,7 @@ public class IngredientController : ControllerBase
     //Through service -> repo 
     private readonly IngredientService _service; 
 
-    public IngredientController(IIngredientService service)
+    public IngredientController(IngredientService service)
     {
         _service = service; 
     }
@@ -60,8 +60,7 @@ public class IngredientController : ControllerBase
     [HttpGet("expired")]
     public async Task<ActionResult<List<IngredientDto>>> GetExpiredIngredients()
     {
-
-        var expired = await _service.GetExpiredIngredientDto();
+        var expired = await _service.GetExpiredIngredient();
         //use ingredient dto - to expose short detail 
         return Ok(expired);
     }
@@ -110,12 +109,6 @@ public class IngredientController : ControllerBase
     }
 
 }
-
-
-//References:
-//dotnet-bot. (2025). ControllerBase Class (Microsoft.AspNetCore.Mvc). Microsoft.com. https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.controllerbase?view=aspnetcore-9.0F
-
-
 
 
 //References:
