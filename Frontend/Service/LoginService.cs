@@ -98,14 +98,19 @@ public class LoginService
     {
         public bool exists{ get; set; }
     }
-        public void Logout()
+    public void Logout()
     {
         _currentUser = null;
     }
-
+     
+     public int GetUserId()
+    {
+        return _currentUser?.Id ?? -1;
+    }
     //DTO
     public class UserInfo
     {
+        public int Id { get; set; }
         public string loginId { get; set; } = string.Empty;
         public string firstName { get; set; } = string.Empty;
         public string lastName { get; set; } = string.Empty;

@@ -59,17 +59,23 @@ public class AppDbContext : DbContext
               entity.HasKey(s => s.Id);
               entity.Property(s => s.Title).IsRequired().HasMaxLength(50);
               entity.Property(s => s.DateCreated).IsRequired();
-             
+              
           });
 
 
-        // Configure your entities here if needed
-        // modelBuilder.Entity<Item>(entity =>
-        // {
-        //     entity.HasKey(e => e.Id);
-        //     entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
-        //     entity.Property(e => e.Description).HasMaxLength(500);
-        // });
+        // item for shopping list - one to many relationship
+        modelBuilder.Entity<Item>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Quantity);
+            entity.Property(e => e.status);
+
+            entity.HasOne(e => e.ShoppingList)
+                  .WithMany(s => s.Items)
+                  .HasForeignKey(e => e.ShoppingListId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
 
         // modelBuilder.Entity<ShoppingList>().HasForeignKey(i => i.ShoppingListId);
 

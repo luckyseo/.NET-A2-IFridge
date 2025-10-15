@@ -1,13 +1,53 @@
 @* landing page *@
-
+@inject IngredientService IngredientService
+@inject LoginService LoginService
 @page "/"
 @inject NavigationManager Navigation
-
+@rendermode InteractiveServer
 
 @* This where the options goes *@
 <Navbar />
 
 <h1>Welcome to IFridge</h1>
 
-<p>Let's get started</p>
+<p>My Fridge</p>
+
+
+@if(ingredients is null || ingredients.Count == 0)
+{
+   <p>No ingredients found.</p>
+   <button class="btn" @onclick="@(() => Navigation.NavigateTo("/ingredients"))">Add Ingredient</button>
+}
+else{
+    <h3>Ingredients in your fridge:</h3>
+    <ul>
+        @foreach(var ingredient in ingredients)
+        {
+            <li>@ingredient.Name - Expiry Date: @ingredient.ExpiredDate.ToShortDateString()</li>
+        }
+    </ul>
+
+    @if(Expired is not null && Expired.Count > 0)
+    {
+        <h3 style="color:red;">Expired Ingredients:</h3>
+        <ul>
+            @foreach(var ingredient in Expired)
+            {
+                <li>@ingredient.Name - Expiry Date: @ingredient.ExpiredDate.ToShortDateString()</li>
+            }
+        </ul>
+    }
+}
+
+@code{
+    private List<Ingredient> ingredients = new List<Ingredient>();
+    private async Task LoadIngredients(){
+
+    int userId = LoginService.GetUserId();
+    ingredients = await IngredientService.GetAllIngredients();
+
+    }
+    private List<Ingredient> Expired => ingredients.Where(i => i.ExpiredDate < DateTime.Now).ToList();
+
+}
 

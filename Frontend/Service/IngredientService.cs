@@ -1,3 +1,4 @@
+using System.Diagnostics.Contracts;
 using Frontend.Models;
 
 namespace Frontend.Service
@@ -20,6 +21,11 @@ namespace Frontend.Service
             return await _httpClient.GetFromJsonAsync<List<Ingredient>>("https://localhost:5001/api/ingredients/expired");
         }
 
+        //get all ingredients
+        public async Task<List<Ingredient>> GetAllIngredients()
+        {
+            return await _httpClient.GetFromJsonAsync<List<Ingredient>>("https://localhost:5001/api/ingredients");
+        }
 
         //Edit later for available ingredients
 
