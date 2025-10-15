@@ -4,6 +4,7 @@ using Backend.Domain.Entities;
 using Backend.Data;
 using System.Data.Common;
 using System.Reflection.Metadata.Ecma335;
+using Backend.Service; 
 
 namespace Backend.Controllers;
 
@@ -13,11 +14,21 @@ namespace Backend.Controllers;
 //inherit from the ControllerBase class and its methods
 public class IngredientController : ControllerBase
 {
-    private readonly AppDbContext _context;
 
-    public IngredientController(AppDbContext context)
+    //instead directly through db context 
+    // private readonly AppDbContext _context;
+
+    // public IngredientController(AppDbContext context)
+    // {
+    //     _context = context;
+    // }
+
+    //Through service -> repo 
+    private readonly IngredientService _service; 
+
+    public IngredientController(IIngredientService service)
     {
-        _context = context;
+        _service = service; 
     }
 
     //List all ingredients
@@ -25,7 +36,7 @@ public class IngredientController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Ingredient>>> GetAll()
     {
-        var ingredients = await _context.Ingredients.ToListAsync();
+        var ingredients = await _service.GetAll(); 
         return Ok(ingredients);
     }
 
@@ -34,7 +45,7 @@ public class IngredientController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Ingredient>> GetIngredientById(int id)
     {
-        var ingredient = await _context.Ingredients.FindAsync(id);
+        var ingredient = await _service.GetById(id);
         if (ingredient == null)
         {
             return NotFound();
@@ -46,24 +57,13 @@ public class IngredientController : ControllerBase
     }
 
     //Convert entity to DTO IngredientDto -> for expiration notificaiton
-    //just general details
     [HttpGet("expired")]
     public async Task<ActionResult<List<IngredientDto>>> GetExpiredIngredients()
     {
-        //add conditions: expire today and within 3 days
-        var today = DateTime.Today;
-        var thresholdDate = today.AddDays(3);
 
-        var expiredIngredients = await _context.Ingredients
-        .Where(e => e.ExpiredDate.HasValue && e.ExpiredDate >= today && e.ExpiredDate <= thresholdDate)
-        .Select(e => new IngredientDto
-        {
-            Id = e.Id,
-            Name = e.Name,
-            ExpiredDate = e.ExpiredDate!.Value
-        })
-        .ToListAsync();
-        return Ok(expiredIngredients);
+        var expired = await _service.GetExpiredIngredientDto();
+        //use ingredient dto - to expose short detail 
+        return Ok(expired);
     }
 
     //add new ingredient when entering the add form
@@ -71,9 +71,8 @@ public class IngredientController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Ingredient>> Create([FromBody] Ingredient createdIngredient)
     {
-        _context.Ingredients.Add(createdIngredient);
-        await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetIngredientById), new { id = createdIngredient.Id }, createdIngredient);
+        var result = await _service.Add(createdIngredient); 
+        return CreatedAtAction(nameof(GetIngredientById), new { id = result.Id }, result);
     }
 
     //for an ingredient it can be edited and deleted
@@ -84,22 +83,20 @@ public class IngredientController : ControllerBase
     public async Task<IActionResult> Update(int id, [FromBody] Ingredient updatedIngredient)
     {
         if (id != updatedIngredient.Id)
-            return BadRequest("Id mismatch");
+        {
+            return BadRequest("Id not found");
+        }
 
-        var existingIngredient = await _context.Ingredients.FindAsync(id);
-        if (existingIngredient == null)
+        var success = await _service.Update(id, updatedIngredient);
+
+        if (!success)
+        {
             return NotFound();
-
-        //Update data
-        existingIngredient.Name = updatedIngredient.Name;
-        existingIngredient.Quantity = updatedIngredient.Quantity;
-        existingIngredient.Category = updatedIngredient.Category;
-        existingIngredient.OpenedDate = updatedIngredient.OpenedDate;
-        existingIngredient.ExpiredDate = updatedIngredient.ExpiredDate;
-
-        await _context.SaveChangesAsync();
-
-        return Ok(updatedIngredient);
+        } else
+        {
+            return Ok(updatedIngredient);
+        }
+ 
     }
 
     //remove ingredient 
@@ -107,17 +104,18 @@ public class IngredientController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var ingredient = await _context.Ingredients.FindAsync(id);
-        if (ingredient == null)
-            return NotFound();
-
-        _context.Ingredients.Remove(ingredient);
-        await _context.SaveChangesAsync();
-
+        var success = await _service.Delete(id);
+        if (!success) return NotFound(); 
         return NoContent();
     }
 
 }
+
+
+//References:
+//dotnet-bot. (2025). ControllerBase Class (Microsoft.AspNetCore.Mvc). Microsoft.com. https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.controllerbase?view=aspnetcore-9.0F
+
+
 
 
 //References:
