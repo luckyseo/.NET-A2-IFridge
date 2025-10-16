@@ -9,14 +9,14 @@ namespace Frontend.Service;
 public class LoginService
 {
     private readonly HttpClient _httpClient;
-    private UserInfo _currentUser;
+    private UserModel _currentUser;
 
     public LoginService(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }
 
-    public UserInfo? CurrentUser => _currentUser;
+    public UserModel? CurrentUser => _currentUser;
     public bool IsAuthenticated => _currentUser != null;
 
     public async Task<bool> LoginAsync(LoginModel model)
@@ -27,7 +27,7 @@ public class LoginService
             
             if (response.IsSuccessStatusCode)
             {
-                _currentUser = await response.Content.ReadFromJsonAsync<UserInfo>();
+                _currentUser = await response.Content.ReadFromJsonAsync<UserModel>();
                 return true;
             }
             return false;
@@ -62,7 +62,7 @@ public class LoginService
             });
             if (response.IsSuccessStatusCode)
             {
-                _currentUser = await response.Content.ReadFromJsonAsync<UserInfo>();
+                _currentUser = await response.Content.ReadFromJsonAsync<UserModel>();
                 return true;
             }
 
@@ -102,18 +102,26 @@ public class LoginService
     {
         _currentUser = null;
     }
-     
-     public int GetUserId()
+
+    public int GetUserId()
     {
         return _currentUser?.Id ?? -1;
     }
-    //DTO
-    public class UserInfo
+    
+    public UserModel GetUserInfo()
     {
-        public int Id { get; set; }
-        public string loginId { get; set; } = string.Empty;
-        public string firstName { get; set; } = string.Empty;
-        public string lastName { get; set; } = string.Empty;
-        public string preferredName{ get; set; } = string.Empty;
+        return _currentUser;
     }
+    // //DTO
+    // public class UserInfo
+    // {
+    //     public int Id { get; set; }
+    //     public string loginId { get; set; } = string.Empty;
+    //     public string firstName { get; set; } = string.Empty;
+    //     public string lastName { get; set; } = string.Empty;
+    //     public string preferredName { get; set; } = string.Empty;
+
+    //     public string Allergies { get; set; } = string.Empty;
+    //     public string pw { get; set; } = string.Empty;
+    // }
 }
