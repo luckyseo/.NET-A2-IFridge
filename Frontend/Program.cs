@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Frontend.Service;
 using Frontend.Models;
+
 //resgister service here 
 // 
 
@@ -35,8 +36,8 @@ namespace Frontend
                 return new LoginService(http);
                 }
             );
-            builder.Services.AddSingleton<ShoppingListService>();
-            builder.Services.AddSingleton<IngredientService>();
+            builder.Services.AddScoped<ShoppingListService>();
+            builder.Services.AddScoped<IngredientService>();
 
             var app = builder.Build();
 

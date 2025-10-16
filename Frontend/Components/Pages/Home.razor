@@ -23,7 +23,9 @@ else{
     <ul>
         @foreach(var ingredient in ingredients)
         {
-            <li>@ingredient.Name - Expiry Date: @ingredient.ExpiredDate.ToShortDateString()</li>
+            @* <li>@ingredient.Name - Expiry Date: @ingredient.ExpiredDate.ToShortDateString()</li> *@
+            <li>@ingredient.Name (@GetCategoryName(ingredient.Category)) - Expiry Date: @ingredient.ExpiredDate.ToShortDateString()</li>
+
         }
     </ul>
 
@@ -41,6 +43,11 @@ else{
 
 @code{
     private List<Ingredient> ingredients = new List<Ingredient>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadIngredients();
+    }
     private async Task LoadIngredients(){
 
     int userId = LoginService.GetUserId();
@@ -48,6 +55,18 @@ else{
 
     }
     private List<Ingredient> Expired => ingredients.Where(i => i.ExpiredDate < DateTime.Now).ToList();
-
+    private string GetCategoryName(int category)
+    {
+        return category switch
+        {
+            0 => "Vegetable",
+            1 => "Fruit",
+            2 => "Dairy",
+            3 => "Meat",
+            4 => "Grain",
+            5 => "Beverage",
+            _ => "Other"
+        };
+    }
 }
 

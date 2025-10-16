@@ -33,13 +33,12 @@
             Category:
             <InputSelect class="form-select" @bind-Value="model.Category">
                 <option disabled selected value="">All</option>
-                <option>Meat and fish</option>
-                <option>Vegetables</option>
-                <option>Fruits</option>
-                <option>Carbs</option>
-                <option>Spices and herbs</option>
-                <option>Herbs and spices</option>
-                <option>Other</option>
+                <option value="0">Diary</option>
+                <option value="1">Meat</option>
+                <option value="2">Vegetable & Fruit</option>
+                <option value="3">Grain</option>
+                <option value="4">Beverage</option>
+                <option value="5">Other</option>
             </InputSelect>
         </label>
     </div>
@@ -76,8 +75,10 @@
     private async Task HandleValidSubmit()
     {
         //IngredientService.AddIngredient(model);
-        Navigation.NavigateTo("/");
+        Console.WriteLine("Form submitted successfully!");
+        Console.WriteLine($"Name: {model.Name}, Category: {model.Category}");
         var success = await IngredientService.AddIngredient(model);
+        
         if(success){
             Navigation.NavigateTo("/");
         }else{
