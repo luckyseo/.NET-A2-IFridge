@@ -3,28 +3,36 @@ using System.Net.Http.Json;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization.Formatters;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace Frontend.Service;
 
 public class LoginService
 {
     private readonly HttpClient _httpClient;
+    private readonly ProtectedSessionStorage _sessionStorage;
     private UserModel _currentUser;
 
-    public LoginService(HttpClient httpClient)
+    public LoginService(HttpClient httpClient, ProtectedSessionStorage sessionStorage)
     {
         _httpClient = httpClient;
+        _sessionStorage = sessionStorage;
     }
 
     public UserModel? CurrentUser => _currentUser;
     public bool IsAuthenticated => _currentUser != null;
 
+    public async Task InitializeAsync()
+    {
+        var result = await _sessionStorage.GetAsync<UserModel>("currentUser");
+        _currentUser = result.Success ? result.Value : null;
+    }
     public async Task<bool> LoginAsync(LoginModel model)
     {
         try
         {
             var response = await _httpClient.PostAsJsonAsync("login/auth", new { loginId = model.loginId, pw = model.pw });
-            
+
             if (response.IsSuccessStatusCode)
             {
                 _currentUser = await response.Content.ReadFromJsonAsync<UserModel>();

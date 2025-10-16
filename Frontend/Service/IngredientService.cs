@@ -25,9 +25,9 @@ namespace Frontend.Service
         }
 
         //get all ingredients
-        public async Task<List<Ingredient>> GetAllIngredients()
+        public async Task<List<Ingredient>> GetAllIngredients(int userId)
         {
-            return await _httpClient.GetFromJsonAsync<List<Ingredient>>("http://localhost:5037/api/ingredient");
+            return await _httpClient.GetFromJsonAsync<List<Ingredient>>("http://localhost:5037/api/ingredient/all/" + userId);
         }
 
         //Edit later for available ingredients

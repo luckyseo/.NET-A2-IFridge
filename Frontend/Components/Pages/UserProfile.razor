@@ -11,13 +11,23 @@
 @if (LoginService.CurrentUser != null)
 {
     <p>Hi @LoginService.CurrentUser.firstName</p>
+    <button class="btn" @onclick=HandleLogout>Log out</button>
 }
 else
 {
     <p>You are not logged in. Please <a href="/login">login</a> to view your profile.</p>
 }
+@* <button class="btn" @onclick="@(() => Navigation.NavigateTo("/"))">View available ingredients</button> *@
+
 
 
 @code{
 
-}   
+    private void HandleLogout()
+    {
+        LoginService.Logout();
+        Navigation.NavigateTo("/login");
+    }  
+}
+ 
+

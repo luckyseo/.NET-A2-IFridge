@@ -60,7 +60,7 @@ else{
     private async Task LoadIngredients(){
 
     int userId = LoginService.GetUserId();
-    ingredients = await IngredientService.GetAllIngredients();
+    ingredients = await IngredientService.GetAllIngredients(userId);
 
     }
     private List<Ingredient> Expired => ingredients.Where(i => i.ExpiredDate < DateTime.Now).ToList();

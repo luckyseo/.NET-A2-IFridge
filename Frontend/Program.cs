@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Frontend.Service;
 using Frontend.Models;
-
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 //resgister service here 
 // 
 
@@ -29,11 +29,12 @@ namespace Frontend
             // Register your services here:
             builder.Services.AddScoped<LoginService>(
                 sp => {
-                var http = new HttpClient
-                {
-                    BaseAddress = new Uri("http://localhost:5037") // Backend URL
-                };
-                return new LoginService(http);
+                    var http = new HttpClient
+                    {
+                        BaseAddress = new Uri("http://localhost:5037") // Backend URL
+                    };
+                var sessionStorage = sp.GetRequiredService<ProtectedSessionStorage>();
+                return new LoginService(http,sessionStorage);
                 }
             );
             builder.Services.AddScoped<ShoppingListService>();
