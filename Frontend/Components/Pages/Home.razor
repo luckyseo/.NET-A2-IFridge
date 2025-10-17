@@ -3,7 +3,7 @@
 @inject LoginService LoginService
 @page "/"
 @inject NavigationManager Navigation
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @* This where the options goes *@
 <Navbar />
@@ -12,8 +12,16 @@
 
 <p>My Fridge</p>
 
+@if(isLoading)
+{
+    <p>Loading ingredients...</p>
+}
+else if(!LoginService.IsAuthenticated)
+{
+    <p>Please <a href="/login">login</a> to view your fridge ingredients.</p>
+}
 
-@if(ingredients is null || ingredients.Count == 0)
+else if(ingredients is null || ingredients.Count == 0)
 {
    <p>No ingredients found.</p>
    <button class="btn" @onclick="@(() => Navigation.NavigateTo("/ingredients"))">Add Ingredient</button>
@@ -52,11 +60,28 @@ else{
 
 @code{
     private List<Ingredient> ingredients = new List<Ingredient>();
+    private bool isLoading = true;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoginService.InitializeAsync();
+            
+            if (LoginService.IsAuthenticated)
+            {
+                await LoadIngredients();
+            }
+            
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+    
 
-    protected override async Task OnInitializedAsync()
+    @* protected override async Task OnInitializedAsync()
     {
         await LoadIngredients();
-    }
+    } *@
     private async Task LoadIngredients(){
 
     int userId = LoginService.GetUserId();
@@ -68,12 +93,11 @@ else{
     {
         return category switch
         {
-            0 => "Vegetable",
-            1 => "Fruit",
-            2 => "Dairy",
-            3 => "Meat",
-            4 => "Grain",
-            5 => "Beverage",
+            2 => "VegetableAndFruit",
+            0 => "Dairy",
+            1 => "Meat",
+            3 => "Grain",
+            4 => "Beverage",
             _ => "Other"
         };
     }
@@ -98,4 +122,3 @@ else{
         await LoadIngredients();
     }
 }
-

@@ -5,7 +5,7 @@
 @using Frontend.Components.Shared
 @inject LoginService LoginService
 @inject IngredientService IngredientService
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 
 <Navbar />

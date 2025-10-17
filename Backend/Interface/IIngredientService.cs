@@ -11,7 +11,7 @@ public interface IIngredientService
     //view expired ingredient- ExpiredIngredientService
     //shared method 
 
-    Task<List<Ingredient>> GetAllIngredient();
+    Task<List<Ingredient>> GetAllIngredient(int userId);
     Task<Ingredient?> GetIngredientById(int id);
     Task<Ingredient> AddIngredient(Ingredient ingredient);
     Task<Ingredient?> UpdateIngredient(int id, Ingredient updatedIngredient);

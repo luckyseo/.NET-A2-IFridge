@@ -10,6 +10,7 @@
 @* FromName - .NET 8.0 requirement *@
 <EditForm FormName="registerForm" Model="@model" OnValidSubmit="HandleRegister" class="container">
     <DataAnnotationsValidator />
+    <ValidationSummary />
     <div>
         <label class="form-label">First Name</label>
         <InputText @bind-Value="model.firstName" class="form-control"/>
@@ -48,14 +49,14 @@
         <InputText @bind-Value="model.pw" class="form-control"/>
         <ValidationMessage For="@(()=>model.pw)"/>
     </div>
-    <button type="submit" class="btn btn-primary"">Sign Up</button>
+    <button type="submit" class="btn btn-primary">Sign Up</button>
 </EditForm>
 <div>
     <p>Already registered? </p><a href="/login">Login</a>
 </div>
 
 @code {
-     [SupplyParameterFromForm]
+     //[SupplyParameterFromForm]
     private RegisterModel model{get;set;} = new();
     private string err = string.Empty;
 

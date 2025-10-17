@@ -7,7 +7,7 @@
 @using Frontend.Components.Shared
 @using Frontend.Service
 @using Frontend.Models
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <Navbar />
 
@@ -71,7 +71,10 @@
 @code {
     private Ingredient model = new();
     private string err = string.Empty;
-
+    private async Task OnInitializedAsync()
+    {
+        await LoginService.InitializeAsync();
+    }
     private async Task HandleValidSubmit()
     {
         //IngredientService.AddIngredient(model);

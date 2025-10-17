@@ -17,11 +17,11 @@ public class IngredientService : IIngredientService
         _context = context;
     }
 
-    public async Task<List<Ingredient>> GetAllIngredient()
+  
+    public async Task<List<Ingredient>> GetAllIngredient(int userId)
     {
-        return await _context.Ingredients.ToListAsync();
+        return await _context.Ingredients.Where(i=>i.UserId ==userId).OrderBy(i=>i.ExpiredDate).ToListAsync();
     }
-
     public async Task<Ingredient?> GetIngredientById(int id)
     {
         return await _context.Ingredients.FindAsync(id);

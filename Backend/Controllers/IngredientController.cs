@@ -27,8 +27,8 @@ public class IngredientController : ControllerBase
 
     //List all ingredients
     //GET / api / ingredient
-    [HttpGet("all")]
-        [HttpGet("all/{userId}")]
+    
+    [HttpGet("all/{userId}")]
     public async Task<ActionResult<List<Ingredient>>> GetAllIngredient(int userId)
     {
         var ingredients = await _ingredientService.GetAllIngredient(userId);

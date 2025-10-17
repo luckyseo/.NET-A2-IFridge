@@ -12,6 +12,7 @@ public class LoginService
     private readonly HttpClient _httpClient;
     private readonly ProtectedSessionStorage _sessionStorage;
     private UserModel _currentUser;
+    private bool _isInitialized = false;
 
     public LoginService(HttpClient httpClient, ProtectedSessionStorage sessionStorage)
     {
@@ -24,8 +25,32 @@ public class LoginService
 
     public async Task InitializeAsync()
     {
-        var result = await _sessionStorage.GetAsync<UserModel>("currentUser");
-        _currentUser = result.Success ? result.Value : null;
+        if (_isInitialized)
+        {
+            Console.WriteLine("LoginService already initialized.");
+            return;
+        }
+        try{
+            var result = await _sessionStorage.GetAsync<UserModel>("currentUser");
+
+        if (result.Success)
+        {
+               _currentUser = result.Success ? result.Value : null;
+            Console.WriteLine($"Restored session for user: {_currentUser.loginId}");
+        }
+        else
+        {
+            Console.WriteLine("No existing session found.");
+        }
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine($"Error during initialization: {e.Message}");
+        }
+       finally
+       {
+            _isInitialized = true;
+       }
     }
     public async Task<bool> LoginAsync(LoginModel model)
     {
@@ -36,6 +61,8 @@ public class LoginService
             if (response.IsSuccessStatusCode)
             {
                 _currentUser = await response.Content.ReadFromJsonAsync<UserModel>();
+                await _sessionStorage.SetAsync("currentUser", _currentUser);
+                Console.WriteLine($"Login successful for user: {_currentUser.loginId}");
                 return true;
             }
             return false;
@@ -71,6 +98,8 @@ public class LoginService
             if (response.IsSuccessStatusCode)
             {
                 _currentUser = await response.Content.ReadFromJsonAsync<UserModel>();
+                await _sessionStorage.SetAsync("currentUser", _currentUser);
+                Console.WriteLine($"Registration successful for user: {_currentUser.loginId}");
                 return true;
             }
 
@@ -106,7 +135,7 @@ public class LoginService
     {
         public bool exists{ get; set; }
     }
-    public void Logout()
+    public async Task Logout()
     {
         _currentUser = null;
     }

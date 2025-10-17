@@ -1,8 +1,9 @@
 @* landing page *@
 @inject LoginService LoginService;
 @page "/user"
+@using System.Threading.Tasks
 @inject NavigationManager Navigation
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @* This where the options goes *@
 <Navbar />
@@ -22,10 +23,19 @@ else
 
 
 @code{
-
-    private void HandleLogout()
+    private bool isLoading = true;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        LoginService.Logout();
+        if (firstRender)
+        {
+            await LoginService.InitializeAsync();
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+    private async Task HandleLogout()
+    {
+        await LoginService.Logout();
         Navigation.NavigateTo("/login");
     }  
 }
