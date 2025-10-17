@@ -28,11 +28,13 @@ public class IngredientController : ControllerBase
     //List all ingredients
     //GET / api / ingredient
     [HttpGet("all")]
-    public async Task<ActionResult<List<Ingredient>>> GetAllIngredient()
+        [HttpGet("all/{userId}")]
+    public async Task<ActionResult<List<Ingredient>>> GetAllIngredient(int userId)
     {
-        var ingredients = await _ingredientService.GetAllIngredient();
+        var ingredients = await _ingredientService.GetAllIngredient(userId);
         return Ok(ingredients);
     }
+
 
     //Get an ingredient based on id
     //GET /api/ingredient/{id} 
