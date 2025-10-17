@@ -16,7 +16,7 @@ public class AppDbContext : DbContext
     public DbSet<Recipe> Recipes { get; set; }
      public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
     public DbSet<User> Users { get; set; }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -59,7 +59,7 @@ public class AppDbContext : DbContext
               entity.HasKey(s => s.Id);
               entity.Property(s => s.Title).IsRequired().HasMaxLength(50);
               entity.Property(s => s.DateCreated).IsRequired();
-              
+
           });
 
 
@@ -80,4 +80,5 @@ public class AppDbContext : DbContext
         // modelBuilder.Entity<ShoppingList>().HasForeignKey(i => i.ShoppingListId);
 
     }
+
 }

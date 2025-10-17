@@ -1,5 +1,7 @@
 using Backend.Data;
 using Microsoft.EntityFrameworkCore;
+using Backend.Services; 
+using Backend.Interface;
 
 namespace Backend;
 
@@ -22,6 +24,9 @@ public class Program
         // Repos & Services
         // builder.Services.AddScoped<IItemRepository, ItemRepository>();
         // builder.Services.AddScoped<IItemService, ItemService>();
+
+        //register ingredient service
+        builder.Services.AddScoped<IIngredientService, IngredientService>();
 
         var app = builder.Build();
 

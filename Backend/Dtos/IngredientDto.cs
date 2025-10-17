@@ -3,7 +3,7 @@
 //condition for expired ingredient -> 
 //red- is expired and orange -> will expired within three days
 
-
+namespace Backend.Dtos;
     public class IngredientDto
     {
         public int Id { get; set; }

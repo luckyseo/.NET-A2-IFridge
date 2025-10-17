@@ -2,41 +2,35 @@
 using Microsoft.EntityFrameworkCore;
 using Backend.Domain.Entities;
 using Backend.Data;
-using System.Data.Common;
-using System.Reflection.Metadata.Ecma335;
 using Backend.Services;
+using Backend.Dtos;
+using Backend.Interface; 
+
+//Ingredient- IIngredientService -> view all ingredient and expiring ingredient
+// Recipe -> IRecipeService -> inherit available ingredient recipe and random browsing all ingredient 
+// Dtos ..
 
 namespace Backend.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 
-//inherit from the ControllerBase class and its methods
 public class IngredientController : ControllerBase
 {
 
-    //instead directly through db context 
-    // private readonly AppDbContext _context;
+    private readonly IIngredientService _ingredientService;
 
-    // public IngredientController(AppDbContext context)
-    // {
-    //     _context = context;
-    // }
-
-    //Through service -> repo 
-    private readonly IngredientService _service; 
-
-    public IngredientController(IngredientService service)
+    public IngredientController(IIngredientService ingredientService)
     {
-        _service = service; 
+        _ingredientService = ingredientService;
     }
 
     //List all ingredients
     //GET / api / ingredient
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Ingredient>>> GetAll()
+    [HttpGet("all")]
+    public async Task<ActionResult<List<Ingredient>>> GetAllIngredient()
     {
-        var ingredients = await _service.GetAll(); 
+        var ingredients = await _ingredientService.GetAllIngredient();
         return Ok(ingredients);
     }
 
@@ -45,23 +39,19 @@ public class IngredientController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Ingredient>> GetIngredientById(int id)
     {
-        var ingredient = await _service.GetById(id);
+        var ingredient = await _ingredientService.GetIngredientById(id);
         if (ingredient == null)
         {
             return NotFound();
         }
-        else
-        {
-            return Ok(ingredient);
-        }
+        return Ok(ingredient);
     }
 
     //Convert entity to DTO IngredientDto -> for expiration notificaiton
     [HttpGet("expired")]
     public async Task<ActionResult<List<IngredientDto>>> GetExpiredIngredients()
     {
-        var expired = await _service.GetExpiredIngredient();
-        //use ingredient dto - to expose short detail 
+        var expired = await _ingredientService.GetExpiredIngredient();
         return Ok(expired);
     }
 
@@ -70,44 +60,40 @@ public class IngredientController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Ingredient>> Create([FromBody] Ingredient createdIngredient)
     {
-        var result = await _service.Add(createdIngredient); 
+        var result = await _ingredientService.AddIngredient(createdIngredient);
         return CreatedAtAction(nameof(GetIngredientById), new { id = result.Id }, result);
     }
-
-    //for an ingredient it can be edited and deleted
 
     //PUT / api / ingredient /{ id}
     //update ingredient [name, category, quantity, opened date, expired date] 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] Ingredient updatedIngredient)
+    public async Task<ActionResult<Ingredient>> Update(int id, [FromBody] Ingredient updatedIngredient)
     {
         if (id != updatedIngredient.Id)
         {
             return BadRequest("Id not found");
         }
 
-        var success = await _service.Update(id, updatedIngredient);
-
-        if (!success)
+        var result = await _ingredientService.UpdateIngredient(id, updatedIngredient);
+        if (result == null)
         {
             return NotFound();
-        } else
-        {
-            return Ok(updatedIngredient);
         }
- 
+        return Ok(result);
     }
 
     //remove ingredient 
     //DELETE /api/ingredient/{id}
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<ActionResult<Ingredient>> Delete(int id)
     {
-        var success = await _service.Delete(id);
-        if (!success) return NotFound(); 
-        return NoContent();
+        var result = await _ingredientService.DeleteIngredient(id);
+        if (result == null)
+        {
+            return NotFound();
+        }
+        return Ok(result);
     }
-
 }
 
 

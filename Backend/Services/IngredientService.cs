@@ -2,77 +2,84 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend.Domain.Entities;
 using Backend.Interface;
-using System.Diagnostics.Contracts;
+using Backend.Data;
+using Backend.Dtos;
 
 namespace Backend.Services;
 
-public class IngredientService
+public class IngredientService : IIngredientService
 {
+    private readonly AppDbContext _context;
 
-    //from repo -> service -> controller 
-    private readonly IIngredientRepository _repo;
-
-    public IngredientService(IIngredientRepository repo)
+    //through db 
+    public IngredientService(AppDbContext context)
     {
-        _repo = repo;
+        _context = context;
     }
 
-
-    public async Task<List<Ingredient>> GetAll()
-        => await _repo.GetAll();
-
-    public async Task<Ingredient> GetById(int id)
-        => await _repo.GetById(id);
-
-    public async Task<List<IngredientDto>> GetExpiredIngredient()
+    public async Task<List<Ingredient>> GetAllIngredient()
     {
-        var today = DateTime.Today;
-        var threshold = today.AddDays(3);
-
-        var expired = await _repo.GetExpired(today, threshold);
-        return expired
-            .Select(e => new IngredientDto
-            {
-                Id = e.Id,
-                Name = e.Name,
-                ExpiredDate = e.ExpiredDate!.Value
-            }).ToList();
+        return await _context.Ingredients.ToListAsync();
     }
 
-    public async Task<Ingredient> Add(Ingredient ingredient)
+    public async Task<Ingredient?> GetIngredientById(int id)
     {
-        await _repo.Add(ingredient);
+        return await _context.Ingredients.FindAsync(id);
+    }
+    public async Task<Ingredient> AddIngredient(Ingredient ingredient)
+    {
+        _context.Ingredients.Add(ingredient); //add to table
+        await _context.SaveChangesAsync();
         return ingredient;
 
     }
-
-    public async Task<bool> Update(int id, Ingredient updatedIngredient)
+    public async Task<Ingredient?> UpdateIngredient(int id, Ingredient updatedIngredient)
     {
-        var existingIngredient = await _repo.GetById(id);
+        //find id then update 
+        var existingIngredient = await _context.Ingredients.FindAsync(id);
         if (existingIngredient == null)
         {
-            return false;
+            return null;
         }
 
+        //Update data 
         existingIngredient.Name = updatedIngredient.Name;
         existingIngredient.Quantity = updatedIngredient.Quantity;
         existingIngredient.Category = updatedIngredient.Category;
         existingIngredient.OpenedDate = updatedIngredient.OpenedDate;
         existingIngredient.ExpiredDate = updatedIngredient.ExpiredDate;
 
-        //update via repo
-        await _repo.Update(existingIngredient);
-        return true;
+        await _context.SaveChangesAsync(); //save changes
+        return existingIngredient;
     }
 
-    public async Task<bool> Delete(int id)
+    public async Task<Ingredient?> DeleteIngredient(int id)
     {
-        var existingIngredient = await _repo.GetById(id);
-        if (existingIngredient == null) return false;
-
-        await _repo.Delete(existingIngredient);
-        return true;
+        var existingIngredient = await _context.Ingredients.FindAsync(id);
+        if(existingIngredient == null)
+        {
+            return null;
+        }
+        _context.Ingredients.Remove(existingIngredient);
+        await _context.SaveChangesAsync();
+        return existingIngredient;
     }
+    
+    public async Task<List<IngredientDto>> GetExpiredIngredient()
+    {
+        var threshold = DateTime.Today.AddDays(3);
 
+        var expired = await _context.Ingredients
+        .Where(i => i.ExpiredDate.HasValue && i.ExpiredDate < threshold)
+        .ToListAsync();
+
+        return expired.Select(e => new IngredientDto
+        {
+            Id = e.Id,
+            Name = e.Name,
+            ExpiredDate = e.ExpiredDate.Value
+        }).ToList();
+    }
 
 }
+
