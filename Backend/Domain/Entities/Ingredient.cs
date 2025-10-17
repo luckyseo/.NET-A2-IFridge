@@ -13,23 +13,21 @@ public class Ingredient
     public int UserId { get; set; }
     public User User { get; set; }
 
+    //for many-many relationship with RecipeIngredient
+    public List<RecipeIngredient> RecipeIngredients { get; set; } = new();
+
 }
 
 public enum IngredientCategory
 {
-    Diary,
-    Meat,
-    VegetableAndFruit,
-    Grain,
-    Beverage,
-    Other
+    Dairy = 0,
+    Meat = 1,
+    VegetableAndFruit = 2,
+    Grain = 3 ,
+    Beverage = 4,
+    Other =5
 }
 
 
-//use dto to notify expired date 
-
-//Will do this later: apply migration
-//dotnet ef migrations add AddIngredientTable
-//dotnet ef database update
 
 

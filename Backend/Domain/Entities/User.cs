@@ -12,4 +12,10 @@ public class User
 
     public List<String> Allergies { get; set; } = new List<String>();
 
+    //a user can have many ingredient
+    public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
 }
+
+
+//References
+//
