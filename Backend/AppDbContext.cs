@@ -101,11 +101,12 @@ public class AppDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
             entity.Property(e => e.Quantity);
-            entity.Property(e => e.status);
+            
 
-            entity.HasOne(e => e.ShoppingList)
+            entity.HasOne(e => e.User)
                   .WithMany(s => s.Items)
-                  .HasForeignKey(e => e.ShoppingListId);
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
 
         });
 
@@ -259,13 +260,13 @@ public class AppDbContext : DbContext
        Quantity = 2
    },
 
-  //chicken and coke 
+   //chicken and coke 
    new RecipeIngredient
-  {
-      RecipeId = 3,
-      IngredientId = 6, // Chicken
-      Quantity = 1
-  },
+   {
+       RecipeId = 3,
+       IngredientId = 6, // Chicken
+       Quantity = 1
+   },
     new RecipeIngredient
     {
         RecipeId = 3,
@@ -296,6 +297,29 @@ public class AppDbContext : DbContext
         Quantity = 1
     }
 );
+        modelBuilder.Entity<Item>().HasData(
+            new Item
+            {
+                Id = 1,
+                Name = "Eggs",
+                Quantity = 12,
+                UserId = 1
+            },
+            new Item
+            {
+                Id = 2,
+                Name = "Bread",
+                Quantity = 1,
+                UserId = 1
+            },
+            new Item
+            {
+                Id = 3,
+                Name = "Milk",
+                Quantity = 2,
+                UserId = 1
+            }
+        );
 
     }
 }

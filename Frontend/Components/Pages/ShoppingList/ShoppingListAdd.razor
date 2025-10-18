@@ -1,53 +1,87 @@
-
 @page "/shoppinglist/add"
-@inject ShoppingListService ListService
 @inject NavigationManager Navigation
+@inject LoginService LoginService
+@inject ItemService ItemService
+
+@using Frontend.Components
 @using Frontend.Components.Shared
 @using Frontend.Service
 @using Frontend.Models
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
-@* <Navbar />
+<Navbar />
 
-<h3>Make a list</h3>
+<h3>Hi @LoginService.CurrentUser.firstName</h3>
+<h3>Add Items</h3>
 
 <EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
+    @* add bootstrap form classes *@
 
     <div class="mb-3">
         <label class="form-label">
-            Title:
-            <InputText @bind-Value="model.Title" />
+            Item:
+            <InputText class="form-control" @bind-Value="model.Name" />
         </label>
     </div>
-
     <div class="mb-3">
         <label class="form-label">
-            Title:
-            <InputTextArea @bind-Value="items" placeholder="e.g. Egg, Tomato, Onion" />
+            Quantity:
+            <InputNumber class="form-control" @bind-Value="model.Quantity" />
         </label>
     </div>
-
     <button type="submit" class="btn btn-primary">Add</button>
-    <button type="button" class="btn btn-primary" @onclick="ClearForm">Clear</button>
-
 </EditForm>
 
+ @* Logic code block *@
 @code {
-    private ShoppingListModel model = new();
-    private string items = "";
-
-    private void HandleValidSubmit()
+    private Item model = new();
+    private string err = string.Empty;
+    private bool isLoading = true;
+    private List<Item> items = new();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        model.Items = items.ToList();
-        ListService.Add(model);
-        Navigation.NavigateTo("shoppinglist/view");
+        if (firstRender)
+        {
+            await LoginService.InitializeAsync();
+            
+            if (LoginService.IsAuthenticated)
+            {
+                await LoadItems();
+            }
+            
+            isLoading = false;
+            StateHasChanged();
+        }
+    } 
+    private async Task HandleValidSubmit()
+    {
+        //IngredientService.AddIngredient(model);
+        Console.WriteLine("Form submitted successfully!");
+        Console.WriteLine($"Name: {model.Name}");
+        
+        var userId = LoginService.GetUserId();
+       // model.UserId = userId;
+        var success = await ItemService.AddItem(model);
+        
+        if(success){
+            Navigation.NavigateTo("/shoppinglist/view");
+        }else{
+            err = "Invalid input. Please try again.";
+        }
     }
 
-    private void ClearForm()
-    {
-        model = new();
-        items = "";
+    private void ClearForm() => model = new();
+
+     private async Task LoadItems(){
+
+    int userId = LoginService.GetUserId();
+    items = await ItemService.GetAllItems(userId);
+
     }
-} *@
+
+}
+
+

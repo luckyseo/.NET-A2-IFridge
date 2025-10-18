@@ -1,56 +1,99 @@
-@* @page "/shoppinglist/view"
-@inject ShoppingListService ListService
+@page "/shoppinglist/view"
+@inject ItemService ItemService
+@* @inject ShoppingListService ListService *@
+@inject LoginService LoginService
+@inject NavigationManager Navigation
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@using Frontend.Components
+@using Frontend.Components.Shared
+@using Frontend.Service
+@using Frontend.Models
+
+<Navbar />
 
 <h3>View my lists</h3>
 
-<div class="card">
-    @foreach (var list in ListService.GetAll())
-    {
-        <div class="card-container">
+ <div class="card-container">
             <div class="card-body">
-                <h5 class="center-head">@list.Title</h5>
-                <span class="center-head">Date: @list.DateCreated.ToShortDateString() </span>
-                <ul>
-                    @foreach (var item in list.Items)
-                    {
-                        <li>@item</li>
-                    }
-                </ul>
-            </div>
+@if(isLoading)
+{
+    <p>Loading items...</p>
+}
+else if(!LoginService.IsAuthenticated)
+{
+    <p>Please <a href="/login">login</a> to add items.</p>
+}
+
+else if(items is null || items.Count == 0)
+{
+   <p>No items found.</p>
+   <button class="btn" @onclick="@(() => Navigation.NavigateTo("/shoppinglist/add"))">Add Item</button>
+}
+else{
+    <div class="list-group d-flex flex-column gap-2">
+    @foreach (var item in items)
+    {
+        <div class="d-flex align-items-center gap-2">
+     
+                <li class="list-group-item d-flex ">@item.Name
+                     <div class="btn-group" role="group">
+                    <button class="btn btn-sm btn-outline-secondary" @onclick="() => DecreaseQuantity(item)">-</button>
+                    <button class="btn btn-sm btn-outline-secondary" disabled>@item.Quantity</button>
+                    <button class="btn btn-sm btn-outline-secondary" @onclick="() => IncreaseQuantity(item)">+</button> 
+                     </div>
+                </li>
+            
+            <button class="btn btn-sm btn-danger" @onclick="() => DeleteItem(item.Id)">X</button>
         </div>
-        <button class="btn btn-danger mt-2" @onclick="() => DeleteList(list)">Delete</button>
     }
 </div>
-
-
-<style>
-    .card {
-        margin: 20px auto;
-    }
-
-    .card-container {
-        font-size: 24px;
-        background: #F9FBFA;
-        border: 1px solid black;
-        width: 62rem;
-        height: 25rem;
-    }
-
-    .card-body {
-        text-align: left;
-        margin-left: 20px;
-    }
-
-    .center-head {
-        text-align: center;
-        font-weight: 500;
-    }
-</style>
-
-
+}
+     </div>
+</div>
 @code {
-    private void DeleteList(ShoppingList list)
+    private List<Item> items = new List<Item>();
+    private bool isLoading = true;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        ListService.Remove(list);
+        if (firstRender)
+        {
+            await LoginService.InitializeAsync();
+            
+            if (LoginService.IsAuthenticated)
+            {
+                await LoadItems();
+            }
+            
+            isLoading = false;
+            StateHasChanged();
+        }
     }
-} *@
+
+    private async Task LoadItems(){
+
+    int userId = LoginService.GetUserId();
+    items = await ItemService.GetAllItems(userId);
+
+    }
+    private async Task IncreaseQuantity(Item item)
+    {
+        item.Quantity++;
+        await ItemService.UpdateItem(item);
+        await LoadItems();
+    }
+    private async Task DecreaseQuantity(Item item)
+    {
+        if (item.Quantity > 0)
+        {
+            item.Quantity--;
+            await ItemService.UpdateItem(item);
+            await LoadItems();
+        }
+    }
+    private async Task DeleteItem(int id){
+        await ItemService.DeleteItem(id);
+        await LoadItems();
+    }
+ 
+}
