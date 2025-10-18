@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Backend.Domain.Entities;
 using Backend.Services;
 using Backend.Dtos;
-using Backend.Interface; 
+using Backend.Interface;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -76,16 +76,19 @@ namespace Backend.Controllers
             return Ok(recipes);
         }
 
-        //when pass to controller match to user
-        // POST: api/recipe/suggestions/id
-        [HttpPost("suggestion/{userId}")]
-        public async Task<ActionResult<List<RecipeSuggestionDto>>> GetRecipeSuggestions(int userId)
-        { 
-            var suggestions = await _recipeService.GetRecipesByAvailableIngredient(userId);
-            return Ok(suggestions);
+        // GET api/recipe/user/{userId}suggestion
+        [HttpGet("user/{userId}/suggestion")]
+        public async Task<ActionResult<List<Recipe>>> GetRecipesByUserIngredients(int userId)
+        {
+            var recipes = await _recipeService.GetRecipesByAvailableIngredient(userId);
+
+            if (recipes == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(recipes);
         }
     }
 }
 
-//suggest recipe based on available igredients of each user
-//need suer id 

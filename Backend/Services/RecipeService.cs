@@ -6,6 +6,7 @@ using Backend.Data;
 using Backend.Dtos;
 using System.Data.SqlTypes;
 using System.ComponentModel;
+using System.Security.Cryptography;
 
 namespace Backend.Services;
 
@@ -18,7 +19,6 @@ public class RecipeService : IRecipeService
     {
         _context = context;
     }
-
 
     //get all recipe - for browsing everything 
     public async Task<List<Recipe>> GetAllRecipes()
@@ -56,10 +56,10 @@ public class RecipeService : IRecipeService
 
         //Update data 
         existingRecipe.Name = updatedRecipe.Name;
+        existingRecipe.Category = updatedRecipe.Category;
         existingRecipe.Description = updatedRecipe.Description;
         existingRecipe.ImageUrl = updatedRecipe.ImageUrl;
         existingRecipe.Steps = updatedRecipe.Steps;
-        existingRecipe.Category = updatedRecipe.Category;
 
         await _context.SaveChangesAsync(); //save changes
         return existingRecipe;
@@ -77,33 +77,29 @@ public class RecipeService : IRecipeService
         return existingRecipe;
     }
 
-
-
     //get recipes that can be made using available ingredient
-    //make a available ingredient dto 
+    //make a availale ingredient dto 
 
-    public async Task<List<RecipeSuggestionDto>> GetRecipesByAvailableIngredient(int userId)
+    public async Task<List<Recipe>> GetRecipesByAvailableIngredient(int userId)
     {
-        var userIngredients = await _context.Ingredients.Where(u => u.UserId == userId).ToListAsync();
+        //get user ingredients bane
+        var userIngredientNames = await _context.Ingredients
+            .Where(i => i.UserId == userId)
+            .Select(i => i.Name.ToLower())
+            .ToListAsync();
 
-        var availableIngredient = userIngredients.Select(u => u.Name.ToLower()).ToHashSet();
-        //using hash set for faster lookup 
 
-        var recipes = await _context.Recipes
-        .Include(i => i.Name.ToLower())
-        .Select(r => new RecipeSuggestionDto
-        {
-            Id = r.Id,
-            Name = r.Name,
-            TotalRequired = r.Ingredients.Count,
-            MatchCount = r.Ingredients.Count(ri => availableIngredient.Contains(ri.IngredientName.ToLower()))
-        })
-        .OrderByDescending(r => r.MatchCount)
-        .ToListAsync();
+        var matchedRecipes = await (
+         from recipe in _context.Recipes
+         where recipe.Ingredients.All(ri => userIngredientNames.Contains(ri.Ingredient.Name.ToLower()))
+         select recipe
+         ).Include(r => r.Ingredients)
+         .ThenInclude(ri => ri.Ingredient)
+         .ToListAsync();
 
-        return recipes;
+        return matchedRecipes;
+
     }
-
 }
 
 //GeeksforGeeks. (2019, March 14). HashSet in C#. GeeksforGeeks. https://www.geeksforgeeks.org/c-sharp/hashset-in-c-sharp/

@@ -67,20 +67,24 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(r => r.Id);
             entity.Property(r => r.Name).IsRequired().HasMaxLength(50);
+            entity.Property(r => r.Category).HasConversion<string>().IsRequired();
             entity.Property(r => r.Description).HasMaxLength(200);
             entity.Property(r => r.ImageUrl);
             entity.Property(r => r.Steps).HasColumnType("TEXT");
-            entity.Property(r => r.Category).HasConversion<string>().IsRequired();
         });
 
-        //belong to recipe 
+
         modelBuilder.Entity<RecipeIngredient>(entity =>
           {
-              entity.HasKey(ri => new { ri.RecipeId, ri.IngredientName });  // composite key
+              entity.HasKey(ri => new { ri.RecipeId, ri.IngredientId });  // composite key
 
               entity.HasOne(ri => ri.Recipe)
                     .WithMany(r => r.Ingredients)
                     .HasForeignKey(ri => ri.RecipeId);
+
+              entity.HasOne(ri => ri.Ingredient)
+                    .WithMany()
+                    .HasForeignKey(ri => ri.IngredientId);
           });
 
 
@@ -257,96 +261,6 @@ public class AppDbContext : DbContext
            Category = RecipeCategory.Main
        }
 
-        );
-
-
-        //fix seed data
-
-        modelBuilder.Entity<RecipeIngredient>().HasData(
-            new RecipeIngredient
-            {
-                RecipeId = 1,
-                IngredientName = "Tomato",
-                Quantity = 2
-            },
-            new RecipeIngredient
-            {
-                RecipeId = 2,
-                IngredientName = "Tomato",
-                Quantity = 1
-            },
-            new RecipeIngredient
-            {
-                RecipeId = 2,
-                IngredientName = "Egg",
-                Quantity = 2
-            },
-            new RecipeIngredient
-            {
-                RecipeId = 3,
-                IngredientName = "Chicken",
-                Quantity = 2
-            },
-            new RecipeIngredient
-            {
-                RecipeId = 3,
-                IngredientName = "Coke",
-                Quantity = 1
-            },
-            new RecipeIngredient
-            {
-                RecipeId = 4,
-                IngredientName = "Salmon",
-                Quantity = 1
-            },
-            new RecipeIngredient
-            {
-                RecipeId = 5,
-                IngredientName = "Salmon",
-                Quantity = 1
-            },
-            new RecipeIngredient
-            {
-                RecipeId = 5,
-                IngredientName = "Tomato",
-                Quantity = 1
-            },
-            new RecipeIngredient
-            {
-                RecipeId = 6,
-                IngredientName = "Beef",
-                Quantity = 1
-            },
-            new RecipeIngredient
-            {
-                RecipeId = 6,
-                IngredientName = "Udon",
-                Quantity = 1
-            },
-            new RecipeIngredient
-            {
-                RecipeId = 6,
-                IngredientName = "Teriyaki Sauce",
-                Quantity = 1
-            },
-            new RecipeIngredient
-            {
-                RecipeId = 7,
-                IngredientName = "Steak",
-                Quantity = 1
-            },
-            new RecipeIngredient
-            {
-                RecipeId = 7,
-                IngredientName = "Potato",
-                Quantity = 2
-            },
-            new RecipeIngredient
-            {
-                RecipeId = 7,
-                IngredientName = "Butter",
-                Quantity = 1
-            }
         );
 
     }

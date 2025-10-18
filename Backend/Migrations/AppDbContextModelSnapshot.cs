@@ -147,6 +147,10 @@ namespace Backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -172,6 +176,7 @@ namespace Backend.Migrations
                         new
                         {
                             Id = 1,
+                            Category = "Soup",
                             Description = "Classic tomato soup recipe",
                             ImageUrl = "https://example.com/soup.jpg",
                             Name = "Tomato Soup",
@@ -180,6 +185,7 @@ namespace Backend.Migrations
                         new
                         {
                             Id = 2,
+                            Category = "Side",
                             Description = "Tasty tomato with fried egg",
                             ImageUrl = "https://example.com/egg.jpg",
                             Name = "Tomato and Egg",
@@ -188,6 +194,7 @@ namespace Backend.Migrations
                         new
                         {
                             Id = 3,
+                            Category = "Side",
                             Description = "A famous Chinese sweet chicken dish",
                             ImageUrl = "https://example.com/chicken.jpg",
                             Name = "Chicken and Coke",
@@ -196,6 +203,7 @@ namespace Backend.Migrations
                         new
                         {
                             Id = 4,
+                            Category = "Main",
                             Description = "A simple lemon salmon with butter",
                             ImageUrl = "https://example.com/salmon.jpg",
                             Name = "Baked Lemon Salmon",
@@ -204,10 +212,29 @@ namespace Backend.Migrations
                         new
                         {
                             Id = 5,
+                            Category = "Main",
                             Description = "An easy and hearty salmon with tomato",
                             ImageUrl = "https://example.com/tomatoSalmon.jpg",
                             Name = "Salmon with Tomato",
                             Steps = "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, cook until ready, add herbs."
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Category = "Main",
+                            Description = "A Japanese style beef eat with udon",
+                            ImageUrl = "https://example.com/undonbeef.jpg",
+                            Name = "Teriyaki beef with udon",
+                            Steps = "Stir fry sliced beef with teryaki sauce and boil some udon to go with"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Category = "Main",
+                            Description = "Classic main course",
+                            ImageUrl = "https://example.com/steak.jpg",
+                            Name = "Steak with mashed potato",
+                            Steps = "Season steak with salt and pepper, pan fry steak with olive oil and butter, prepare mashed potato and gravy sauce"
                         });
                 });
 
@@ -219,6 +246,9 @@ namespace Backend.Migrations
                     b.Property<int>("IngredientId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("IngredientId1")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
 
@@ -226,57 +256,9 @@ namespace Backend.Migrations
 
                     b.HasIndex("IngredientId");
 
-                    b.ToTable("RecipeIngredients");
+                    b.HasIndex("IngredientId1");
 
-                    b.HasData(
-                        new
-                        {
-                            RecipeId = 1,
-                            IngredientId = 1,
-                            Quantity = 2
-                        },
-                        new
-                        {
-                            RecipeId = 2,
-                            IngredientId = 1,
-                            Quantity = 2
-                        },
-                        new
-                        {
-                            RecipeId = 2,
-                            IngredientId = 4,
-                            Quantity = 2
-                        },
-                        new
-                        {
-                            RecipeId = 3,
-                            IngredientId = 6,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            RecipeId = 3,
-                            IngredientId = 5,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            RecipeId = 4,
-                            IngredientId = 3,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            RecipeId = 5,
-                            IngredientId = 3,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            RecipeId = 5,
-                            IngredientId = 1,
-                            Quantity = 1
-                        });
+                    b.ToTable("RecipeIngredients");
                 });
 
             modelBuilder.Entity("Backend.Domain.Entities.ShoppingList", b =>
@@ -377,10 +359,14 @@ namespace Backend.Migrations
             modelBuilder.Entity("Backend.Domain.Entities.RecipeIngredient", b =>
                 {
                     b.HasOne("Backend.Domain.Entities.Ingredient", "Ingredient")
-                        .WithMany("RecipeIngredients")
+                        .WithMany()
                         .HasForeignKey("IngredientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Backend.Domain.Entities.Ingredient", null)
+                        .WithMany("RecipeIngredients")
+                        .HasForeignKey("IngredientId1");
 
                     b.HasOne("Backend.Domain.Entities.Recipe", "Recipe")
                         .WithMany("Ingredients")
