@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class NewUpdate : Migration
+    public partial class NewMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -99,8 +99,9 @@ namespace Backend.Migrations
                 {
                     RecipeId = table.Column<int>(type: "INTEGER", nullable: false),
                     IngredientId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Quantity = table.Column<int>(type: "INTEGER", nullable: false),
-                    IngredientId1 = table.Column<int>(type: "INTEGER", nullable: true)
+                    RecipeName = table.Column<string>(type: "TEXT", nullable: false),
+                    IngredientName = table.Column<string>(type: "TEXT", nullable: false),
+                    Quantity = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -111,11 +112,6 @@ namespace Backend.Migrations
                         principalTable: "Ingredients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RecipeIngredients_Ingredients_IngredientId1",
-                        column: x => x.IngredientId1,
-                        principalTable: "Ingredients",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_RecipeIngredients_Recipes_RecipeId",
                         column: x => x.RecipeId,
@@ -192,11 +188,6 @@ namespace Backend.Migrations
                 name: "IX_RecipeIngredients_IngredientId",
                 table: "RecipeIngredients",
                 column: "IngredientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RecipeIngredients_IngredientId1",
-                table: "RecipeIngredients",
-                column: "IngredientId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShoppingLists_UserId",

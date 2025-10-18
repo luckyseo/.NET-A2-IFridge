@@ -256,16 +256,5 @@ public class AppDbContext : DbContext
            Steps = "Season steak with salt and pepper, pan fry steak with olive oil and butter, prepare mashed potato and gravy sauce",
            Category = RecipeCategory.Main
        });
-
-        modelBuilder.Entity<RecipeIngredient>().HasData(
-            new RecipeIngredient { RecipeId = 1, IngredientId = 1 },
-            new RecipeIngredient { RecipeId = 2, IngredientId = 1 },
-            new RecipeIngredient { RecipeId = 2, IngredientId = 4 },
-            new RecipeIngredient { RecipeId = 3, IngredientId = 6 },
-            new RecipeIngredient { RecipeId = 3, IngredientId = 5 },
-            new RecipeIngredient { RecipeId = 4, IngredientId = 3 },
-            new RecipeIngredient { RecipeId = 5, IngredientId = 3 },
-            new RecipeIngredient { RecipeId = 5, IngredientId = 1 }
-        );
     }
 }

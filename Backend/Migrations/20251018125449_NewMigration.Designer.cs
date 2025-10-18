@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251018052802_NewUpdate")]
-    partial class NewUpdate
+    [Migration("20251018125449_NewMigration")]
+    partial class NewMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -249,17 +249,20 @@ namespace Backend.Migrations
                     b.Property<int>("IngredientId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("IngredientId1")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("IngredientName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("RecipeName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("RecipeId", "IngredientId");
 
                     b.HasIndex("IngredientId");
-
-                    b.HasIndex("IngredientId1");
 
                     b.ToTable("RecipeIngredients");
                 });
@@ -362,17 +365,13 @@ namespace Backend.Migrations
             modelBuilder.Entity("Backend.Domain.Entities.RecipeIngredient", b =>
                 {
                     b.HasOne("Backend.Domain.Entities.Ingredient", "Ingredient")
-                        .WithMany()
+                        .WithMany("RecipeIngredients")
                         .HasForeignKey("IngredientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Backend.Domain.Entities.Ingredient", null)
-                        .WithMany("RecipeIngredients")
-                        .HasForeignKey("IngredientId1");
-
                     b.HasOne("Backend.Domain.Entities.Recipe", "Recipe")
-                        .WithMany("Ingredients")
+                        .WithMany("RecipeIngredients")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -400,7 +399,7 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Domain.Entities.Recipe", b =>
                 {
-                    b.Navigation("Ingredients");
+                    b.Navigation("RecipeIngredients");
                 });
 
             modelBuilder.Entity("Backend.Domain.Entities.ShoppingList", b =>
