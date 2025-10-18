@@ -101,11 +101,12 @@ public class AppDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
             entity.Property(e => e.Quantity);
-            entity.Property(e => e.status);
+            
 
-            entity.HasOne(e => e.ShoppingList)
+            entity.HasOne(e => e.User)
                   .WithMany(s => s.Items)
-                  .HasForeignKey(e => e.ShoppingListId);
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
 
         });
 
@@ -236,31 +237,92 @@ public class AppDbContext : DbContext
             Name = "Salmon with Tomato",
             Description = "An easy and hearty salmon with tomato",
             ImageUrl = "https://example.com/tomatoSalmon.jpg",
-            Steps = "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, cook until ready, add herbs.",
-            Category = RecipeCategory.Main
-        },
+            Steps = "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, cook until ready, add herbs."
+        }
+        );
+
+        modelBuilder.Entity<RecipeIngredient>().HasData(
+    new RecipeIngredient
+    {
+        RecipeId = 1,
+        IngredientId = 1, // tomato
+        Quantity = 2
+    },
+
+    //tomato and egg - match 2
+    new RecipeIngredient
+    {
+        RecipeId = 2,
+        IngredientId = 1, // tomato
+        Quantity = 2
+    },
+
+   new RecipeIngredient
+   {
+       RecipeId = 2,
+       IngredientId = 4, // egg
+       Quantity = 2
+   },
+
+   //chicken and coke 
+   new RecipeIngredient
+   {
+       RecipeId = 3,
+       IngredientId = 6, // Chicken
+       Quantity = 1
+   },
+    new RecipeIngredient
+    {
+        RecipeId = 3,
+        IngredientId = 5, // Coke
+        Quantity = 1
+    },
 
 
-       new Recipe
-       {
-           Id = 6,
-           Name = "Teriyaki beef with udon",
-           Description = "A Japanese style beef eat with udon",
-           ImageUrl = "https://example.com/undonbeef.jpg",
-           Steps = "Stir fry sliced beef with teryaki sauce and boil some udon to go with",
-           Category = RecipeCategory.Main
-       },
+    // Baked Lemon Salmon
+    new RecipeIngredient
+    {
+        RecipeId = 4,
+        IngredientId = 3, // Salmon
+        Quantity = 1
+    },
 
-       new Recipe
-       {
-           Id = 7,
-           Name = "Steak with mashed potato",
-           Description = "Classic main course",
-           ImageUrl = "https://example.com/steak.jpg",
-           Steps = "Season steak with salt and pepper, pan fry steak with olive oil and butter, prepare mashed potato and gravy sauce",
-           Category = RecipeCategory.Main
-       }
-
+    // Salmon with Tomato
+    new RecipeIngredient
+    {
+        RecipeId = 5,
+        IngredientId = 3, // Salmon
+        Quantity = 1
+    },
+    new RecipeIngredient
+    {
+        RecipeId = 5,
+        IngredientId = 1, // Tomato
+        Quantity = 1
+    }
+);
+        modelBuilder.Entity<Item>().HasData(
+            new Item
+            {
+                Id = 1,
+                Name = "Eggs",
+                Quantity = 12,
+                UserId = 1
+            },
+            new Item
+            {
+                Id = 2,
+                Name = "Bread",
+                Quantity = 1,
+                UserId = 1
+            },
+            new Item
+            {
+                Id = 3,
+                Name = "Milk",
+                Quantity = 2,
+                UserId = 1
+            }
         );
 
     }

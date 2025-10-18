@@ -1,60 +1,95 @@
 //Using this as a psedue code to for controller.cs
-
 using Backend.Domain.Entities;
-//using Backend.Services;
+using Backend.Interface;
+using Backend.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Backend.Dtos;
+using Microsoft.VisualBasic;
 
 namespace Backend.Controllers;
 
-// [ApiController]
-// [Route("api/[controller]")]
-// public class ItemsController : ControllerBase
-//{
-    // private readonly IItemService _itemService;
+[ApiController]
+[Route("api/[controller]")]
 
-    // public ItemsController(IItemService itemService)
-    // {
-    //     _itemService = itemService;
-    // }
+public class ItemController : ControllerBase
+{
+    private readonly IItemService _itemService;
+    public ItemController(IItemService itemService)
+    {
+        _itemService = itemService;
+    }
 
-    // [HttpGet]
-    // public async Task<ActionResult<List<Item>>> GetAll()
-    // {
-    //     var items = await _itemService.GetAllItemsAsync();
-    //     return Ok(items);
-    // }
+    //List all items
+    //GET / api / item
+    [HttpGet("all/{userId}")]
+    public async Task<ActionResult<List<Item>>> GetAllItems(int userId)
+    {
+        var items = await _itemService.GetAllItems(userId);
+        return Ok(items); //placeholder
+    }
 
-    // [HttpGet("{id}")]
-    // public async Task<ActionResult<Item>> GetById(int id)
-    // {
-    //     var item = await _itemService.GetItemByIdAsync(id);
-    //     if (item == null)
-    //         return NotFound();
+     [HttpGet("{id}")]
+    public async Task<ActionResult<Item>> GetItemById(int id)
+    {
+        var item = await _itemService.GetItemById(id);
+        if (item == null)
+        {
+            return NotFound();
+        }
+        return Ok(item);
+    }
 
-    //     return Ok(item);
-    // }
 
-    // [HttpPost]
-    // public async Task<ActionResult<Item>> Create(Item item)
-    // {
-    //     var createdItem = await _itemService.CreateItemAsync(item);
-    //     return CreatedAtAction(nameof(GetById), new { id = createdItem.Id }, createdItem);
-    // }
+    //add new item when entering the add form
+    [HttpPost]
+    public async Task<ActionResult<Item>> CreateItem([FromBody] ItemCreateDto dto)
+    {
 
-    // [HttpPut("{id}")]
-    // public async Task<IActionResult> Update(int id, Item item)
-    // {
-    //     if (id != item.Id)
-    //         return BadRequest();
+        var item = new Item
+        {
+            Name = dto.Name,
+            Quantity = dto.Quantity,
+            UserId = dto.UserId
+        };
+        //save to db
 
-    //     await _itemService.UpdateItemAsync(item);
-    //     return NoContent();
-    // }
+        var newItem = await _itemService.AddItem(item);
+        return CreatedAtAction(nameof(GetItemById), new { id = newItem.Id }, newItem);
+    }
 
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> Delete(int id)
-    // {
-    //     await _itemService.DeleteItemAsync(id);
-    //     return NoContent();
-    // }
-//}
+    //update item when editing the item
+    [HttpPut("{id}")] //api/item/{id}
+    public async Task<ActionResult<Item>> UpdateItem(int id, [FromBody] ItemUpdateDto dto)
+    {
+
+        //find the id first 
+        var item = await _itemService.GetItemById(id);
+        //then edit 
+        if (item == null)
+        {
+            return NotFound();
+        }
+
+        //Update
+        item.Name = dto.Name;
+        item.Quantity = dto.Quantity;
+    
+
+        await _itemService.UpdateItem(id, item);
+        return Ok(item);
+    
+    }
+
+    //delete item when clicking delete button
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<Item>> DeleteItem(int id)
+    {
+        var deletedItem = await _itemService.DeleteItem(id);
+        if (deletedItem == null)
+        {
+            return NotFound();
+        }
+       return Ok(deletedItem);
+    }
+}

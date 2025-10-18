@@ -14,6 +14,7 @@ public class User
 
     //a user can have many ingredient
     public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
+    public ICollection<Item>? Items { get; set; } = new List<Item>();
 }
 
 

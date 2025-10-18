@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251018052802_NewUpdate")]
-    partial class NewUpdate
+    [Migration("20251018055810_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -131,17 +131,42 @@ namespace Backend.Migrations
                     b.Property<int?>("Quantity")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ShoppingListId")
+                    b.Property<int?>("ShoppingListId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("status")
+                    b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ShoppingListId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Items");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Eggs",
+                            Quantity = 12,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Bread",
+                            Quantity = 1,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Milk",
+                            Quantity = 2,
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("Backend.Domain.Entities.Recipe", b =>
@@ -215,29 +240,11 @@ namespace Backend.Migrations
                         new
                         {
                             Id = 5,
-                            Category = "Main",
+                            Category = "Salad",
                             Description = "An easy and hearty salmon with tomato",
                             ImageUrl = "https://example.com/tomatoSalmon.jpg",
                             Name = "Salmon with Tomato",
                             Steps = "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, cook until ready, add herbs."
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Category = "Main",
-                            Description = "A Japanese style beef eat with udon",
-                            ImageUrl = "https://example.com/undonbeef.jpg",
-                            Name = "Teriyaki beef with udon",
-                            Steps = "Stir fry sliced beef with teryaki sauce and boil some udon to go with"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Category = "Main",
-                            Description = "Classic main course",
-                            ImageUrl = "https://example.com/steak.jpg",
-                            Name = "Steak with mashed potato",
-                            Steps = "Season steak with salt and pepper, pan fry steak with olive oil and butter, prepare mashed potato and gravy sauce"
                         });
                 });
 
@@ -262,6 +269,56 @@ namespace Backend.Migrations
                     b.HasIndex("IngredientId1");
 
                     b.ToTable("RecipeIngredients");
+
+                    b.HasData(
+                        new
+                        {
+                            RecipeId = 1,
+                            IngredientId = 1,
+                            Quantity = 2
+                        },
+                        new
+                        {
+                            RecipeId = 2,
+                            IngredientId = 1,
+                            Quantity = 2
+                        },
+                        new
+                        {
+                            RecipeId = 2,
+                            IngredientId = 4,
+                            Quantity = 2
+                        },
+                        new
+                        {
+                            RecipeId = 3,
+                            IngredientId = 6,
+                            Quantity = 1
+                        },
+                        new
+                        {
+                            RecipeId = 3,
+                            IngredientId = 5,
+                            Quantity = 1
+                        },
+                        new
+                        {
+                            RecipeId = 4,
+                            IngredientId = 3,
+                            Quantity = 1
+                        },
+                        new
+                        {
+                            RecipeId = 5,
+                            IngredientId = 3,
+                            Quantity = 1
+                        },
+                        new
+                        {
+                            RecipeId = 5,
+                            IngredientId = 1,
+                            Quantity = 1
+                        });
                 });
 
             modelBuilder.Entity("Backend.Domain.Entities.ShoppingList", b =>
@@ -350,13 +407,17 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Domain.Entities.Item", b =>
                 {
-                    b.HasOne("Backend.Domain.Entities.ShoppingList", "ShoppingList")
+                    b.HasOne("Backend.Domain.Entities.ShoppingList", null)
                         .WithMany("Items")
-                        .HasForeignKey("ShoppingListId")
+                        .HasForeignKey("ShoppingListId");
+
+                    b.HasOne("Backend.Domain.Entities.User", "User")
+                        .WithMany("Items")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ShoppingList");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Backend.Domain.Entities.RecipeIngredient", b =>
@@ -411,6 +472,8 @@ namespace Backend.Migrations
             modelBuilder.Entity("Backend.Domain.Entities.User", b =>
                 {
                     b.Navigation("Ingredients");
+
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }
