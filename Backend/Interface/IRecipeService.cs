@@ -22,7 +22,7 @@ public interface IRecipeService
 
     //get recipes that can be made using available ingredient
     Task<List<Recipe>> GetRecipesByCategory(RecipeCategory category);
-    Task<List<Recipe?>> GetRecipesByAvailableIngredient(int userId);
+    Task<List<RecipeSuggestionDto>> GetRecipesByAvailableIngredient(int userId);
 
 }
 

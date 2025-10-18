@@ -60,9 +60,6 @@ public class AppDbContext : DbContext
 
         });
 
-
-        // modelBuilder.Entity<ShoppingList>().HasForeignKey(i => i.ShoppingListId);
-
         modelBuilder.Entity<Recipe>(entity =>
         {
             entity.HasKey(r => r.Id);
@@ -73,20 +70,18 @@ public class AppDbContext : DbContext
             entity.Property(r => r.Steps).HasColumnType("TEXT");
         });
 
-
-        modelBuilder.Entity<RecipeIngredient>(entity =>
+        modelBuilder.Entity<RecipeIngredients>(entity =>
           {
-              entity.HasKey(ri => new { ri.RecipeId, ri.IngredientId });  // composite key
+              entity.HasKey(ri => new { ri.RecipeId, ri.IngredientId });
 
               entity.HasOne(ri => ri.Recipe)
-                    .WithMany(r => r.Ingredients)
+                    .WithMany(r => r.RecipeIngredients)
                     .HasForeignKey(ri => ri.RecipeId);
 
               entity.HasOne(ri => ri.Ingredient)
-                    .WithMany()
+                    .WithMany(i => i.RecipeIngredients)
                     .HasForeignKey(ri => ri.IngredientId);
           });
-
 
         modelBuilder.Entity<ShoppingList>(entity =>
         {
@@ -259,9 +254,17 @@ public class AppDbContext : DbContext
            ImageUrl = "https://example.com/steak.jpg",
            Steps = "Season steak with salt and pepper, pan fry steak with olive oil and butter, prepare mashed potato and gravy sauce",
            Category = RecipeCategory.Main
-       }
+       });
 
+        modelBuilder.Entity<RecipeIngredients>().HasData(
+            new RecipeIngredient { RecipeId = 1, IngredientId = 1 },
+            new RecipeIngredient { RecipeId = 2, IngredientId = 1 },
+            new RecipeIngredient { RecipeId = 2, IngredientId = 4 },
+            new RecipeIngredient { RecipeId = 3, IngredientId = 6 },
+            new RecipeIngredient { RecipeId = 3, IngredientId = 5 },
+            new RecipeIngredient { RecipeId = 4, IngredientId = 3 },
+            new RecipeIngredient { RecipeId = 5, IngredientId = 3 },
+            new RecipeIngredient { RecipeId = 5, IngredientId = 1 }
         );
-
     }
 }

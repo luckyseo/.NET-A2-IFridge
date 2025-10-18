@@ -7,6 +7,9 @@ using Backend.Dtos;
 using System.Data.SqlTypes;
 using System.ComponentModel;
 using System.Security.Cryptography;
+using System.ComponentModel.Design;
+using System.Runtime.CompilerServices;
+using System.Data.Common;
 
 namespace Backend.Services;
 
@@ -79,27 +82,54 @@ public class RecipeService : IRecipeService
 
     //get recipes that can be made using available ingredient
     //make a availale ingredient dto 
-
-    public async Task<List<Recipe>> GetRecipesByAvailableIngredient(int userId)
+    //dto act as a termporary storage because the ingredients can always change 
+    public async Task<List<RecipeSuggestionDto>> GetRecipesByAvailableIngredient(int userId)
     {
-        //get user ingredients bane
+        //get user's ingredient name 
         var userIngredientNames = await _context.Ingredients
-            .Where(i => i.UserId == userId)
-            .Select(i => i.Name.ToLower())
-            .ToListAsync();
+        .Where(i => i.UserId == userId)
+        .Select(i => i.Name.ToLower())
+        .ToListAsync();
 
+        //get recipes with their ingredients
+        var allRecipes = await _context.Recipes
+      .Include(r => r.RecipeIngredients)
+      .ThenInclude(ri => ri.Ingredient)
+      .ToListAsync();
 
-        var matchedRecipes = await (
-         from recipe in _context.Recipes
-         where recipe.Ingredients.All(ri => userIngredientNames.Contains(ri.Ingredient.Name.ToLower()))
-         select recipe
-         ).Include(r => r.Ingredients)
-         .ThenInclude(ri => ri.Ingredient)
-         .ToListAsync();
+        //return suggested recipe
+        var suggestions = new List<RecipeSuggestionDto>();
 
-        return matchedRecipes;
+        foreach (var recipe in allRecipes)
+        {
+            var requiredIngredientNames = recipe.RecipeIngredients
+                .Select(ri => ri.Ingredient.Name.ToLower())
+                .ToList();
 
+            var missingIngredients = requiredIngredientNames
+            .Where(name => !userIngredientNames.Contains(name))
+            .ToList();
+
+            //Build dto 
+            var suggestionDto = new RecipeSuggestionDto
+            {
+                Id = recipe.Id,
+                Name = recipe.Name,
+                Description = recipe.Description,
+                Category = recipe.Category,
+                ImageUrl = recipe.ImageUrl,
+                Steps = recipe.Steps,
+                TotalIngredients = requiredIngredientNames.Count(),
+                MissingIngredientsCount = missingIngredients.Count(),
+                MissingIngredients = missingIngredients
+            };
+            suggestions.Add(suggestionDto);
+        }
+        return suggestions.OrderBy(s => s.MissingIngredientsCount).ToList();
     }
+
+
+
 }
 
 //GeeksforGeeks. (2019, March 14). HashSet in C#. GeeksforGeeks. https://www.geeksforgeeks.org/c-sharp/hashset-in-c-sharp/

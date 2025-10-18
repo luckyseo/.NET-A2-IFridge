@@ -5,12 +5,13 @@ namespace Backend.Domain.Entities
     {
         //fk to recipe 
         public int RecipeId { get; set; }
-        public Recipe Recipe { get; set; }
+        public string RecipeName { get; set; }
+        public Recipe Recipe { get; set; } = null!;
         //fk to ingredient 
         public int IngredientId { get; set; }
-        public Ingredient Ingredient { get; set; }
+        public string IngredientName { get; set; }
+        public Ingredient Ingredient { get; set; } = null!;
         // public string IngredientName { get; set; } = string.Empty;
-
         public int Quantity { get; set; } //required amount for a recipe
 
     }

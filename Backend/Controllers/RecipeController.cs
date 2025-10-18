@@ -78,11 +78,11 @@ namespace Backend.Controllers
 
         // GET api/recipe/user/{userId}suggestion
         [HttpGet("user/{userId}/suggestion")]
-        public async Task<ActionResult<List<Recipe>>> GetRecipesByUserIngredients(int userId)
+        public async Task<ActionResult<List<RecipeSuggestionDto>>> GetRecipesByUserIngredients(int userId)
         {
             var recipes = await _recipeService.GetRecipesByAvailableIngredient(userId);
 
-            if (recipes == null)
+            if (recipes == null || recipes.Count ==0)
             {
                 return NotFound();
             }
