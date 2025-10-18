@@ -76,7 +76,7 @@ namespace Backend.Controllers
             var recipes = await _recipeService.GetRecipesByCategory(category);
             return Ok(recipes);
         }
-
+        
         // GET api/recipe/user/{userId}suggestion
         [HttpGet("user/{userId}/suggestion")]
         public async Task<ActionResult<List<RecipeSuggestionDto>>> GetRecipesByUserIngredients(int userId)
