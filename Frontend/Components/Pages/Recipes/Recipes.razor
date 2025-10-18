@@ -1,104 +1,96 @@
-@* <h2>Recipe</h2> *@
+@page "/recipes"
+@inject ItemService ItemService
 
+@inject LoginService LoginService
+@inject RecipeService RecipeService
+@inject NavigationManager Navigation
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
-@* search bar- find a recipe *@
+@using Frontend.Components
+@using Frontend.Components.Shared
+@using Frontend.Service
+@using Frontend.Models
 
-@* <input class="form-control" placeholder="Search by recipe name or ingredient..." @bind="searchTerm" />
+@* <Navbar /> *@
 
-<select class="form-select" @bind="selectedCategory">
-    <option value="">All</option>
-    @foreach (var category in categories)
-    {
-        <option value="@category">@category</option>
-    }
-</select> *@
+<h3>View Recipes</h3>
 
-@* Suggest based on available ingredients *@
-@* Fetch some from recipe model then match based on available ingredient *@
-
-
-
-@* Display recipes as card *@
-@* <div class="recipe-grid">
-    @if (!FilteredRecipes.Any())
-    {
-        <p class="errorMsg">No recipes found.</p>
-    }
-
-    @foreach (var recipe in FilteredRecipes)
-    {
-        <div class="recipe-card">
-            <img src="@recipe.Image" />
-            <h5>@recipe.Title</h5>
-            <p><strong>Category:</strong> @recipe.Category</p>
-            <p><strong>Ingredients:</strong></p>
-            <ul>
-                @foreach (var item in recipe.Ingredients)
+ <div class="card-container">
+            <div class="card-body">
+                @if(isLoading)
                 {
-                    <li>@item</li>
+                    <p>Loading Recipes...</p>
                 }
-            </ul>
-            <p><strong>Instructions:</strong></p>
-            <p>@recipe.Instructions</p>
-        </div>
-    }
-</div> *@
+                else if(!LoginService.IsAuthenticated)
+                {
+                    <p>Please <a href="/login">login</a> to see recipes</p>
+                }
 
-<style>
-    .recipe-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1.5rem;
-        justify-content: center; 
-        margin-top: 2rem;
-    }
-
-    .recipe-card {
-        background-color: #F9FBFA;
-        border: 1px solid black;
-        padding: 1rem;
-        width: 320px;
-        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .recipe-card img {
-        width: 100%;
-        height: 180px;
-        object-fit: cover; 
-        margin-bottom: 0.5rem;
-    }
-
-    .recipe-card h5 {
-        font-weight: 500;
-        font-size: 1.2rem;
-    }
-
-    input.form-control,
-    select.form-select {
-        max-width: 500px;
-        margin: auto;
-        display: block;
-        background-color: #F9FBFA;
-        border: 1px solid black;
-        padding: 0.5rem;
-    }
-
-    .errorMsg {
-        color: red;
-        font-weight: bold;
-    }
-</style>
-
-@* 
+                else if(SuggestedRecipes is null || SuggestedRecipes.Count == 0)
+                {
+                <p>No ingredients! Time to go to Woolies!</p>
+                <button class="btn" @onclick="@(() => Navigation.NavigateTo("/shoppinglist/view"))">Shopping</button>
+                }
+                else
+                {
+                    <div class="carousel d-flex flex-row gap-3 overflow-auto">
+                    @foreach (var sr in SuggestedRecipes)
+                    {
+                        <div class="carousel-item d-flex align-items-center gap-2">
+                            <img src="@sr.ImageUrl" alt="@sr.Name" width="100" height="100" />
+                            <span>@sr.Name (@sr.Category.ToString())</span>
+                            <div>
+                            @foreach(var i in sr.Ingredients)
+                            {
+                                <li>@i.Name</li>
+                            }
+                            </div>
+                            <p>@sr.Description</p>
+                        </div>
+                    }
+                    </div>
+                }
+            </div>
+</div>
 @code {
-    private string searchTerm = "";
-    private string selectedCategory = "";
-    private List<string> categories = new() { "Chicken", "Pork", "Beef", "Vegan", "Low Carb", "High Protein" };
+    private List<Recipe> recipes = new List<Recipe>(); //all recipes
+    private List<Recipe> SuggestedRecipes = new List<Recipe>(); //suggested Recipes based on current fridge stock    private bool isLoading = true;
+    
+    private bool isLoading = true;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Console.WriteLine("Initializing Login Service...");
+            await LoginService.InitializeAsync();
+            
+            if (LoginService.IsAuthenticated)
+            {
+                Console.WriteLine("Loading Recipes...");
+                @* await LoadIngredients(); *@
+                await LoadRecipes();
+            }
+            
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
 
-    private IEnumerable<Recipe> FilteredRecipes => RecipeService.Recipes
-    .Where(r =>
-    (r.Title.Contains(searchTerm) || r.Ingredients.Any(i => i.Contains(searchTerm)))
-    &&
-    r.Category == selectedCategory
-    );
-} *@
+    @* private string GetCategoryName(int category)
+    {
+        return category switch
+        {
+            0=> "Salad",
+            1=> "Soup",
+            2=> "Main",
+            3=> "Side",
+            4=> "Vegetarian",
+            5=> "Dessert",
+        };
+    } *@
+    private async Task LoadRecipes(){
+        int userId = LoginService.GetUserId();
+        recipes = await RecipeService.GetAllRecipes();
+        SuggestedRecipes = await RecipeService.GetSuggestedRecipes(userId);
+    }
+}

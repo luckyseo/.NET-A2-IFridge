@@ -40,7 +40,7 @@ namespace Frontend
             builder.Services.AddScoped<ShoppingListService>();
             builder.Services.AddScoped<IngredientService>();
             builder.Services.AddScoped<ItemService>();
-
+            builder.Services.AddScoped<RecipeService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
