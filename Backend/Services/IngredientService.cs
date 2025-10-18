@@ -17,7 +17,6 @@ public class IngredientService : IIngredientService
         _context = context;
     }
 
-  
     public async Task<List<Ingredient>> GetAllIngredient(int userId)
     {
         return await _context.Ingredients.Where(i=>i.UserId ==userId).OrderBy(i=>i.ExpiredDate).ToListAsync();
@@ -31,7 +30,6 @@ public class IngredientService : IIngredientService
         _context.Ingredients.Add(ingredient); //add to table
         await _context.SaveChangesAsync();
         return ingredient;
-
     }
     public async Task<Ingredient?> UpdateIngredient(int id, Ingredient updatedIngredient)
     {

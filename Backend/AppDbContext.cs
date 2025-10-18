@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Data.Common;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using Backend.Domain.Entities;
@@ -69,21 +70,17 @@ public class AppDbContext : DbContext
             entity.Property(r => r.Description).HasMaxLength(200);
             entity.Property(r => r.ImageUrl);
             entity.Property(r => r.Steps).HasColumnType("TEXT");
+            entity.Property(r => r.Category).HasConversion<string>().IsRequired();
         });
 
-        //Associative entity
+        //belong to recipe 
         modelBuilder.Entity<RecipeIngredient>(entity =>
           {
-              entity.HasKey(ri => new { ri.RecipeId, ri.IngredientId });  // composite key
+              entity.HasKey(ri => new { ri.RecipeId, ri.IngredientName });  // composite key
 
               entity.HasOne(ri => ri.Recipe)
                     .WithMany(r => r.Ingredients)
                     .HasForeignKey(ri => ri.RecipeId);
-
-              entity.HasOne(ri => ri.Ingredient)
-                    .WithMany(i => i.RecipeIngredients)
-                    .HasForeignKey(ri => ri.IngredientId);
-
           });
 
 
@@ -93,7 +90,6 @@ public class AppDbContext : DbContext
             entity.Property(s => s.Title).IsRequired().HasMaxLength(50);
             entity.Property(s => s.DateCreated).IsRequired();
         });
-
 
         // item for shopping list - one to many relationship
         modelBuilder.Entity<Item>(entity =>
@@ -196,7 +192,8 @@ public class AppDbContext : DbContext
                 Name = "Tomato Soup",
                 Description = "Classic tomato soup recipe",
                 ImageUrl = "https://example.com/soup.jpg",
-                Steps = "Boil tomatoes, blend, add spices."
+                Steps = "Boil tomatoes, blend, add spices.",
+                Category = RecipeCategory.Soup
             },
 
         new Recipe
@@ -205,7 +202,8 @@ public class AppDbContext : DbContext
             Name = "Tomato and Egg",
             Description = "Tasty tomato with fried egg",
             ImageUrl = "https://example.com/egg.jpg",
-            Steps = "Cut tomator, fried scramble egg then mix together and add ketchup also seasoning."
+            Steps = "Cut tomator, fried scramble egg then mix together and add ketchup also seasoning.",
+            Category = RecipeCategory.Side
         },
 
         new Recipe
@@ -214,7 +212,8 @@ public class AppDbContext : DbContext
             Name = "Chicken and Coke",
             Description = "A famous Chinese sweet chicken dish",
             ImageUrl = "https://example.com/chicken.jpg",
-            Steps = "Cut chicken, season with salt and pepper then pan-fry chicken until golden, put Coke and Chinese spices to braise until all cooked."
+            Steps = "Cut chicken, season with salt and pepper then pan-fry chicken until golden, put Coke and Chinese spices to braise until all cooked.",
+            Category = RecipeCategory.Side
         },
 
         new Recipe
@@ -223,7 +222,8 @@ public class AppDbContext : DbContext
             Name = "Baked Lemon Salmon",
             Description = "A simple lemon salmon with butter",
             ImageUrl = "https://example.com/salmon.jpg",
-            Steps = "Season salmon, put to oevn or pan fry until turn golden, add butter and saute garlic, finish with lemon juice."
+            Steps = "Season salmon, put to oevn or pan fry until turn golden, add butter and saute garlic, finish with lemon juice.",
+            Category = RecipeCategory.Main
         },
 
         new Recipe
@@ -232,70 +232,122 @@ public class AppDbContext : DbContext
             Name = "Salmon with Tomato",
             Description = "An easy and hearty salmon with tomato",
             ImageUrl = "https://example.com/tomatoSalmon.jpg",
-            Steps = "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, cook until ready, add herbs."
-        }
+            Steps = "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, cook until ready, add herbs.",
+            Category = RecipeCategory.Main
+        },
+
+
+       new Recipe
+       {
+           Id = 6,
+           Name = "Teriyaki beef with udon",
+           Description = "A Japanese style beef eat with udon",
+           ImageUrl = "https://example.com/undonbeef.jpg",
+           Steps = "Stir fry sliced beef with teryaki sauce and boil some udon to go with",
+           Category = RecipeCategory.Main
+       },
+
+       new Recipe
+       {
+           Id = 7,
+           Name = "Steak with mashed potato",
+           Description = "Classic main course",
+           ImageUrl = "https://example.com/steak.jpg",
+           Steps = "Season steak with salt and pepper, pan fry steak with olive oil and butter, prepare mashed potato and gravy sauce",
+           Category = RecipeCategory.Main
+       }
+
         );
 
+
+        //fix seed data
+
         modelBuilder.Entity<RecipeIngredient>().HasData(
-    new RecipeIngredient
-    {
-        RecipeId = 1,
-        IngredientId = 1, // tomato
-        Quantity = 2
-    },
-
-    //tomato and egg - match 2
-    new RecipeIngredient
-    {
-        RecipeId = 2,
-        IngredientId = 1, // tomato
-        Quantity = 2
-    },
-
-   new RecipeIngredient
-   {
-       RecipeId = 2,
-       IngredientId = 4, // egg
-       Quantity = 2
-   },
-
-  //chicken and coke 
-   new RecipeIngredient
-  {
-      RecipeId = 3,
-      IngredientId = 6, // Chicken
-      Quantity = 1
-  },
-    new RecipeIngredient
-    {
-        RecipeId = 3,
-        IngredientId = 5, // Coke
-        Quantity = 1
-    },
-
-
-    // Baked Lemon Salmon
-    new RecipeIngredient
-    {
-        RecipeId = 4,
-        IngredientId = 3, // Salmon
-        Quantity = 1
-    },
-
-    // Salmon with Tomato
-    new RecipeIngredient
-    {
-        RecipeId = 5,
-        IngredientId = 3, // Salmon
-        Quantity = 1
-    },
-    new RecipeIngredient
-    {
-        RecipeId = 5,
-        IngredientId = 1, // Tomato
-        Quantity = 1
-    }
-);
+            new RecipeIngredient
+            {
+                RecipeId = 1,
+                IngredientName = "Tomato",
+                Quantity = 2
+            },
+            new RecipeIngredient
+            {
+                RecipeId = 2,
+                IngredientName = "Tomato",
+                Quantity = 1
+            },
+            new RecipeIngredient
+            {
+                RecipeId = 2,
+                IngredientName = "Egg",
+                Quantity = 2
+            },
+            new RecipeIngredient
+            {
+                RecipeId = 3,
+                IngredientName = "Chicken",
+                Quantity = 2
+            },
+            new RecipeIngredient
+            {
+                RecipeId = 3,
+                IngredientName = "Coke",
+                Quantity = 1
+            },
+            new RecipeIngredient
+            {
+                RecipeId = 4,
+                IngredientName = "Salmon",
+                Quantity = 1
+            },
+            new RecipeIngredient
+            {
+                RecipeId = 5,
+                IngredientName = "Salmon",
+                Quantity = 1
+            },
+            new RecipeIngredient
+            {
+                RecipeId = 5,
+                IngredientName = "Tomato",
+                Quantity = 1
+            },
+            new RecipeIngredient
+            {
+                RecipeId = 6,
+                IngredientName = "Beef",
+                Quantity = 1
+            },
+            new RecipeIngredient
+            {
+                RecipeId = 6,
+                IngredientName = "Udon",
+                Quantity = 1
+            },
+            new RecipeIngredient
+            {
+                RecipeId = 6,
+                IngredientName = "Teriyaki Sauce",
+                Quantity = 1
+            },
+            new RecipeIngredient
+            {
+                RecipeId = 7,
+                IngredientName = "Steak",
+                Quantity = 1
+            },
+            new RecipeIngredient
+            {
+                RecipeId = 7,
+                IngredientName = "Potato",
+                Quantity = 2
+            },
+            new RecipeIngredient
+            {
+                RecipeId = 7,
+                IngredientName = "Butter",
+                Quantity = 1
+            }
+        );
 
     }
 }
