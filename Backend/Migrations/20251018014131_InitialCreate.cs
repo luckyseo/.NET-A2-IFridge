@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class NewMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -125,8 +125,8 @@ namespace Backend.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     Quantity = table.Column<int>(type: "INTEGER", nullable: true),
-                    status = table.Column<bool>(type: "INTEGER", nullable: false),
-                    ShoppingListId = table.Column<int>(type: "INTEGER", nullable: false)
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ShoppingListId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -135,6 +135,11 @@ namespace Backend.Migrations
                         name: "FK_Items_ShoppingLists_ShoppingListId",
                         column: x => x.ShoppingListId,
                         principalTable: "ShoppingLists",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Items_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -170,6 +175,16 @@ namespace Backend.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Items",
+                columns: new[] { "Id", "Name", "Quantity", "ShoppingListId", "UserId" },
+                values: new object[,]
+                {
+                    { 1, "Eggs", 12, null, 1 },
+                    { 2, "Bread", 1, null, 1 },
+                    { 3, "Milk", 2, null, 1 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "RecipeIngredients",
                 columns: new[] { "IngredientId", "RecipeId", "Quantity" },
                 values: new object[,]
@@ -193,6 +208,11 @@ namespace Backend.Migrations
                 name: "IX_Items_ShoppingListId",
                 table: "Items",
                 column: "ShoppingListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Items_UserId",
+                table: "Items",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RecipeIngredients_IngredientId",

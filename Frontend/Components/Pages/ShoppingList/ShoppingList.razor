@@ -3,31 +3,42 @@
 @using Frontend.Components; 
 @using Frontend.Service
 @using Frontend.Components.Shared;
-
-
-
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@using Frontend.Models
+@inject LoginService LoginService
+@inject ItemService ItemService
 <Navbar />
+
 <h3>Shopping List</h3>
 <div class="btn-group"> 
-<button class="btn" @onclick="@(() => OnButtonClicked("View my list"))">View my list</button>
-<button class="btn" @onclick="@(() => OnButtonClicked("Make a list"))">Make a list</button>
+<button class="btn" @onclick="@(() => Navigation.NavigateTo("/shoppinglist/view"))">View my list</button>
+<button class="btn" @onclick="@(() => Navigation.NavigateTo("/shoppinglist/add"))">Make a list</button>
 </div>
 
 
 @code {
-    private void OnButtonClicked(string btn)
+ private List<Item> items = new List<Item>();
+    private bool isLoading = true;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        switch (btn)
+        if (firstRender)
         {
-            case "View my list":
-                Navigation.NavigateTo("/shoppinglist/view");
-                break;
-            case "Make a list":
-                Navigation.NavigateTo("/shoppinglist/add");
-                break;
+            await LoginService.InitializeAsync();
+            
+            if (LoginService.IsAuthenticated)
+            {
+                await LoadItems();
+            }
+            
+            isLoading = false;
+            StateHasChanged();
         }
-
     }
 
+    private async Task LoadItems(){
 
+    int userId = LoginService.GetUserId();
+    items = await ItemService.GetAllItems(userId);
+
+    }
 }

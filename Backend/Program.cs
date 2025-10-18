@@ -27,6 +27,7 @@ public class Program
 
         //register ingredient service
         builder.Services.AddScoped<IIngredientService, IngredientService>();
+        builder.Services.AddScoped<IItemService, ItemService>(); 
 
         var app = builder.Build();
 

@@ -128,17 +128,42 @@ namespace Backend.Migrations
                     b.Property<int?>("Quantity")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ShoppingListId")
+                    b.Property<int?>("ShoppingListId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("status")
+                    b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ShoppingListId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Items");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Eggs",
+                            Quantity = 12,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Bread",
+                            Quantity = 1,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Milk",
+                            Quantity = 2,
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("Backend.Domain.Entities.Recipe", b =>
@@ -365,13 +390,17 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Domain.Entities.Item", b =>
                 {
-                    b.HasOne("Backend.Domain.Entities.ShoppingList", "ShoppingList")
+                    b.HasOne("Backend.Domain.Entities.ShoppingList", null)
                         .WithMany("Items")
-                        .HasForeignKey("ShoppingListId")
+                        .HasForeignKey("ShoppingListId");
+
+                    b.HasOne("Backend.Domain.Entities.User", "User")
+                        .WithMany("Items")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ShoppingList");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Backend.Domain.Entities.RecipeIngredient", b =>
@@ -422,6 +451,8 @@ namespace Backend.Migrations
             modelBuilder.Entity("Backend.Domain.Entities.User", b =>
                 {
                     b.Navigation("Ingredients");
+
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

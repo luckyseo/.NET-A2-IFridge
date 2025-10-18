@@ -39,6 +39,7 @@ namespace Frontend
             );
             builder.Services.AddScoped<ShoppingListService>();
             builder.Services.AddScoped<IngredientService>();
+            builder.Services.AddScoped<ItemService>();
 
             var app = builder.Build();
 
