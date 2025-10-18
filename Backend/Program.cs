@@ -1,6 +1,6 @@
 using Backend.Data;
 using Microsoft.EntityFrameworkCore;
-using Backend.Services; 
+using Backend.Services;
 using Backend.Interface;
 
 namespace Backend;
@@ -27,7 +27,11 @@ public class Program
 
         //register ingredient service
         builder.Services.AddScoped<IIngredientService, IngredientService>();
+
+        builder.Services.AddScoped<IRecipeService, RecipeService>();
+
         builder.Services.AddScoped<IItemService, ItemService>(); 
+
 
         var app = builder.Build();
 
@@ -38,7 +42,7 @@ public class Program
             app.UseSwaggerUI();
         }
         app.UseCors("blazor");
-        //app.UseHttpsRedirection();
+        //app.UseHttpsRedirection();     
         app.UseAuthorization();
 
         app.MapControllers();

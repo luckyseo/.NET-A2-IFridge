@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend.Domain.Entities;
-using Backend.Data; 
+using Backend.Data;
+using Backend.Dtos;
 
 namespace Backend.Interface;
 
@@ -14,15 +15,16 @@ public interface IRecipeService
 
     Task<List<Recipe>> GetAllRecipes();
     Task<Recipe?> GetRecipeById(int id);
-   
+
     Task<Recipe> AddRecipe(Recipe recipe);
     Task<Recipe> UpdateRecipe(int id, Recipe updatedRecipe);
     Task<Recipe> DeleteRecipe(int id);
 
     //get recipes that can be made using available ingredient
-     Task<List<Recipe>> GetRecipesBy(string category);
-    Task<List<Recipe>> GetRecipesByAvailableIngredient(List<Ingredient> availableIngredients);
+    Task<List<Recipe>> GetRecipesByCategory(RecipeCategory category);
+    Task<List<Recipe?>> GetRecipesByAvailableIngredient(int userId);
 
 }
+
 
 

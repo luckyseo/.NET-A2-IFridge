@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251018014131_InitialCreate")]
+    [Migration("20251018055810_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -175,6 +175,10 @@ namespace Backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -200,6 +204,7 @@ namespace Backend.Migrations
                         new
                         {
                             Id = 1,
+                            Category = "Soup",
                             Description = "Classic tomato soup recipe",
                             ImageUrl = "https://example.com/soup.jpg",
                             Name = "Tomato Soup",
@@ -208,6 +213,7 @@ namespace Backend.Migrations
                         new
                         {
                             Id = 2,
+                            Category = "Side",
                             Description = "Tasty tomato with fried egg",
                             ImageUrl = "https://example.com/egg.jpg",
                             Name = "Tomato and Egg",
@@ -216,6 +222,7 @@ namespace Backend.Migrations
                         new
                         {
                             Id = 3,
+                            Category = "Side",
                             Description = "A famous Chinese sweet chicken dish",
                             ImageUrl = "https://example.com/chicken.jpg",
                             Name = "Chicken and Coke",
@@ -224,6 +231,7 @@ namespace Backend.Migrations
                         new
                         {
                             Id = 4,
+                            Category = "Main",
                             Description = "A simple lemon salmon with butter",
                             ImageUrl = "https://example.com/salmon.jpg",
                             Name = "Baked Lemon Salmon",
@@ -232,6 +240,7 @@ namespace Backend.Migrations
                         new
                         {
                             Id = 5,
+                            Category = "Salad",
                             Description = "An easy and hearty salmon with tomato",
                             ImageUrl = "https://example.com/tomatoSalmon.jpg",
                             Name = "Salmon with Tomato",
@@ -247,12 +256,17 @@ namespace Backend.Migrations
                     b.Property<int>("IngredientId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("IngredientId1")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("RecipeId", "IngredientId");
 
                     b.HasIndex("IngredientId");
+
+                    b.HasIndex("IngredientId1");
 
                     b.ToTable("RecipeIngredients");
 
@@ -409,10 +423,14 @@ namespace Backend.Migrations
             modelBuilder.Entity("Backend.Domain.Entities.RecipeIngredient", b =>
                 {
                     b.HasOne("Backend.Domain.Entities.Ingredient", "Ingredient")
-                        .WithMany("RecipeIngredients")
+                        .WithMany()
                         .HasForeignKey("IngredientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Backend.Domain.Entities.Ingredient", null)
+                        .WithMany("RecipeIngredients")
+                        .HasForeignKey("IngredientId1");
 
                     b.HasOne("Backend.Domain.Entities.Recipe", "Recipe")
                         .WithMany("Ingredients")

@@ -20,6 +20,7 @@ namespace Backend.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Category = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     ImageUrl = table.Column<string>(type: "TEXT", nullable: true),
                     Steps = table.Column<string>(type: "TEXT", nullable: false)
@@ -98,7 +99,8 @@ namespace Backend.Migrations
                 {
                     RecipeId = table.Column<int>(type: "INTEGER", nullable: false),
                     IngredientId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Quantity = table.Column<int>(type: "INTEGER", nullable: false)
+                    Quantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    IngredientId1 = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -109,6 +111,11 @@ namespace Backend.Migrations
                         principalTable: "Ingredients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RecipeIngredients_Ingredients_IngredientId1",
+                        column: x => x.IngredientId1,
+                        principalTable: "Ingredients",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_RecipeIngredients_Recipes_RecipeId",
                         column: x => x.RecipeId,
@@ -146,14 +153,14 @@ namespace Backend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Recipes",
-                columns: new[] { "Id", "Description", "ImageUrl", "Name", "Steps" },
+                columns: new[] { "Id", "Category", "Description", "ImageUrl", "Name", "Steps" },
                 values: new object[,]
                 {
-                    { 1, "Classic tomato soup recipe", "https://example.com/soup.jpg", "Tomato Soup", "Boil tomatoes, blend, add spices." },
-                    { 2, "Tasty tomato with fried egg", "https://example.com/egg.jpg", "Tomato and Egg", "Cut tomator, fried scramble egg then mix together and add ketchup also seasoning." },
-                    { 3, "A famous Chinese sweet chicken dish", "https://example.com/chicken.jpg", "Chicken and Coke", "Cut chicken, season with salt and pepper then pan-fry chicken until golden, put Coke and Chinese spices to braise until all cooked." },
-                    { 4, "A simple lemon salmon with butter", "https://example.com/salmon.jpg", "Baked Lemon Salmon", "Season salmon, put to oevn or pan fry until turn golden, add butter and saute garlic, finish with lemon juice." },
-                    { 5, "An easy and hearty salmon with tomato", "https://example.com/tomatoSalmon.jpg", "Salmon with Tomato", "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, cook until ready, add herbs." }
+                    { 1, "Soup", "Classic tomato soup recipe", "https://example.com/soup.jpg", "Tomato Soup", "Boil tomatoes, blend, add spices." },
+                    { 2, "Side", "Tasty tomato with fried egg", "https://example.com/egg.jpg", "Tomato and Egg", "Cut tomator, fried scramble egg then mix together and add ketchup also seasoning." },
+                    { 3, "Side", "A famous Chinese sweet chicken dish", "https://example.com/chicken.jpg", "Chicken and Coke", "Cut chicken, season with salt and pepper then pan-fry chicken until golden, put Coke and Chinese spices to braise until all cooked." },
+                    { 4, "Main", "A simple lemon salmon with butter", "https://example.com/salmon.jpg", "Baked Lemon Salmon", "Season salmon, put to oevn or pan fry until turn golden, add butter and saute garlic, finish with lemon juice." },
+                    { 5, "Salad", "An easy and hearty salmon with tomato", "https://example.com/tomatoSalmon.jpg", "Salmon with Tomato", "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, cook until ready, add herbs." }
                 });
 
             migrationBuilder.InsertData(
@@ -186,17 +193,17 @@ namespace Backend.Migrations
 
             migrationBuilder.InsertData(
                 table: "RecipeIngredients",
-                columns: new[] { "IngredientId", "RecipeId", "Quantity" },
+                columns: new[] { "IngredientId", "RecipeId", "IngredientId1", "Quantity" },
                 values: new object[,]
                 {
-                    { 1, 1, 2 },
-                    { 1, 2, 2 },
-                    { 4, 2, 2 },
-                    { 5, 3, 1 },
-                    { 6, 3, 1 },
-                    { 3, 4, 1 },
-                    { 1, 5, 1 },
-                    { 3, 5, 1 }
+                    { 1, 1, null, 2 },
+                    { 1, 2, null, 2 },
+                    { 4, 2, null, 2 },
+                    { 5, 3, null, 1 },
+                    { 6, 3, null, 1 },
+                    { 3, 4, null, 1 },
+                    { 1, 5, null, 1 },
+                    { 3, 5, null, 1 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -218,6 +225,11 @@ namespace Backend.Migrations
                 name: "IX_RecipeIngredients_IngredientId",
                 table: "RecipeIngredients",
                 column: "IngredientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecipeIngredients_IngredientId1",
+                table: "RecipeIngredients",
+                column: "IngredientId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShoppingLists_UserId",

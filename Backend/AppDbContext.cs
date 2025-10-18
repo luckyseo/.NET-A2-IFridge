@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Data.Common;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using Backend.Domain.Entities;
@@ -66,12 +67,13 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(r => r.Id);
             entity.Property(r => r.Name).IsRequired().HasMaxLength(50);
+            entity.Property(r => r.Category).HasConversion<string>().IsRequired();
             entity.Property(r => r.Description).HasMaxLength(200);
             entity.Property(r => r.ImageUrl);
             entity.Property(r => r.Steps).HasColumnType("TEXT");
         });
 
-        //Associative entity
+
         modelBuilder.Entity<RecipeIngredient>(entity =>
           {
               entity.HasKey(ri => new { ri.RecipeId, ri.IngredientId });  // composite key
@@ -81,9 +83,8 @@ public class AppDbContext : DbContext
                     .HasForeignKey(ri => ri.RecipeId);
 
               entity.HasOne(ri => ri.Ingredient)
-                    .WithMany(i => i.RecipeIngredients)
+                    .WithMany()
                     .HasForeignKey(ri => ri.IngredientId);
-
           });
 
 
@@ -93,7 +94,6 @@ public class AppDbContext : DbContext
             entity.Property(s => s.Title).IsRequired().HasMaxLength(50);
             entity.Property(s => s.DateCreated).IsRequired();
         });
-
 
         // item for shopping list - one to many relationship
         modelBuilder.Entity<Item>(entity =>
@@ -197,7 +197,8 @@ public class AppDbContext : DbContext
                 Name = "Tomato Soup",
                 Description = "Classic tomato soup recipe",
                 ImageUrl = "https://example.com/soup.jpg",
-                Steps = "Boil tomatoes, blend, add spices."
+                Steps = "Boil tomatoes, blend, add spices.",
+                Category = RecipeCategory.Soup
             },
 
         new Recipe
@@ -206,7 +207,8 @@ public class AppDbContext : DbContext
             Name = "Tomato and Egg",
             Description = "Tasty tomato with fried egg",
             ImageUrl = "https://example.com/egg.jpg",
-            Steps = "Cut tomator, fried scramble egg then mix together and add ketchup also seasoning."
+            Steps = "Cut tomator, fried scramble egg then mix together and add ketchup also seasoning.",
+            Category = RecipeCategory.Side
         },
 
         new Recipe
@@ -215,7 +217,8 @@ public class AppDbContext : DbContext
             Name = "Chicken and Coke",
             Description = "A famous Chinese sweet chicken dish",
             ImageUrl = "https://example.com/chicken.jpg",
-            Steps = "Cut chicken, season with salt and pepper then pan-fry chicken until golden, put Coke and Chinese spices to braise until all cooked."
+            Steps = "Cut chicken, season with salt and pepper then pan-fry chicken until golden, put Coke and Chinese spices to braise until all cooked.",
+            Category = RecipeCategory.Side
         },
 
         new Recipe
@@ -224,7 +227,8 @@ public class AppDbContext : DbContext
             Name = "Baked Lemon Salmon",
             Description = "A simple lemon salmon with butter",
             ImageUrl = "https://example.com/salmon.jpg",
-            Steps = "Season salmon, put to oevn or pan fry until turn golden, add butter and saute garlic, finish with lemon juice."
+            Steps = "Season salmon, put to oevn or pan fry until turn golden, add butter and saute garlic, finish with lemon juice.",
+            Category = RecipeCategory.Main
         },
 
         new Recipe
