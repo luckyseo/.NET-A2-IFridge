@@ -61,29 +61,30 @@ public class AppDbContext : DbContext
         });
 
 
-        // modelBuilder.Entity<ShoppingList>().HasForeignKey(i => i.ShoppingListId);
-
         modelBuilder.Entity<Recipe>(entity =>
-        {
-            entity.HasKey(r => r.Id);
-            entity.Property(r => r.Name).IsRequired().HasMaxLength(50);
-            entity.Property(r => r.Category).HasConversion<string>().IsRequired();
-            entity.Property(r => r.Description).HasMaxLength(200);
-            entity.Property(r => r.ImageUrl);
-            entity.Property(r => r.Steps).HasColumnType("TEXT");
-        });
-
+               {
+                   entity.HasKey(r => r.Id);
+                   entity.Property(r => r.Name).IsRequired().HasMaxLength(50);
+                   entity.Property(r => r.Category).HasConversion<string>().IsRequired();
+                   entity.Property(r => r.Description).HasMaxLength(200);
+                   entity.Property(r => r.ImageUrl);
+                   entity.Property(r => r.Steps).HasColumnType("TEXT");
+                   entity.Property(r => r.IngredientList).HasConversion(
+                       x => string.Join(",", x),
+                       x => x.Split(new[] { ',' }).Select(s => s.Trim()).ToList()
+                   );
+               });
 
         modelBuilder.Entity<RecipeIngredient>(entity =>
           {
-              entity.HasKey(ri => new { ri.RecipeId, ri.IngredientId });  // composite key
+              entity.HasKey(ri => new { ri.RecipeId, ri.IngredientId });
 
               entity.HasOne(ri => ri.Recipe)
-                    .WithMany(r => r.Ingredients)
+                    .WithMany(r => r.RecipeIngredients)
                     .HasForeignKey(ri => ri.RecipeId);
 
               entity.HasOne(ri => ri.Ingredient)
-                    .WithMany()
+                    .WithMany(i => i.RecipeIngredients)
                     .HasForeignKey(ri => ri.IngredientId);
           });
 
@@ -101,7 +102,7 @@ public class AppDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
             entity.Property(e => e.Quantity);
-            
+
 
             entity.HasOne(e => e.User)
                   .WithMany(s => s.Items)
@@ -197,8 +198,9 @@ public class AppDbContext : DbContext
                 Name = "Tomato Soup",
                 Description = "Classic tomato soup recipe",
                 ImageUrl = "https://example.com/soup.jpg",
-                Steps = "Boil tomatoes, blend, add spices.",
-                Category = RecipeCategory.Soup
+                Steps = "Boil tomatoes, add some carrot and onion, blend, add spices.",
+                Category = RecipeCategory.Soup,
+                IngredientList = { "Tomato", "Carrot", "Onion" }
             },
 
         new Recipe
@@ -208,7 +210,8 @@ public class AppDbContext : DbContext
             Description = "Tasty tomato with fried egg",
             ImageUrl = "https://example.com/egg.jpg",
             Steps = "Cut tomator, fried scramble egg then mix together and add ketchup also seasoning.",
-            Category = RecipeCategory.Side
+            Category = RecipeCategory.Side,
+            IngredientList = { "Tomato", "Egg", "SoySauce" }
         },
 
         new Recipe
@@ -217,8 +220,9 @@ public class AppDbContext : DbContext
             Name = "Chicken and Coke",
             Description = "A famous Chinese sweet chicken dish",
             ImageUrl = "https://example.com/chicken.jpg",
-            Steps = "Cut chicken, season with salt and pepper then pan-fry chicken until golden, put Coke and Chinese spices to braise until all cooked.",
-            Category = RecipeCategory.Side
+            Steps = "Cut chicken, season with salt and pepper then pan-fry chicken until golden, put Coke and Soy sauce to braise until all cooked.",
+            Category = RecipeCategory.Side,
+            IngredientList = { "Chicken", "Coke", "SoySauce" }
         },
 
         new Recipe
@@ -228,7 +232,8 @@ public class AppDbContext : DbContext
             Description = "A simple lemon salmon with butter",
             ImageUrl = "https://example.com/salmon.jpg",
             Steps = "Season salmon, put to oevn or pan fry until turn golden, add butter and saute garlic, finish with lemon juice.",
-            Category = RecipeCategory.Main
+            Category = RecipeCategory.Main,
+            IngredientList = { "Salmon", "Lemon", "Butter", "Garlic" }
         },
 
         new Recipe
@@ -237,70 +242,36 @@ public class AppDbContext : DbContext
             Name = "Salmon with Tomato",
             Description = "An easy and hearty salmon with tomato",
             ImageUrl = "https://example.com/tomatoSalmon.jpg",
-            Steps = "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, cook until ready, add herbs."
-        }
-        );
+            Steps = "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, saute onion, cook until ready, add herbs.",
+            Category = RecipeCategory.Main,
+            IngredientList = { "Tomato", "Salmon", "Onion" }
+        },
 
-        modelBuilder.Entity<RecipeIngredient>().HasData(
-    new RecipeIngredient
-    {
-        RecipeId = 1,
-        IngredientId = 1, // tomato
-        Quantity = 2
-    },
+       new Recipe
+       {
+           Id = 6,
+           Name = "Teriyaki beef with udon",
+           Description = "A Japanese style beef eat with udon",
+           ImageUrl = "https://example.com/undonbeef.jpg",
+           Steps = "Stir fry sliced beef with teryaki sauce and boil some udon to go with",
+           Category = RecipeCategory.Main,
+           IngredientList = { "Beef", "Teriyaki", "Udon", "Garlic" }
 
-    //tomato and egg - match 2
-    new RecipeIngredient
-    {
-        RecipeId = 2,
-        IngredientId = 1, // tomato
-        Quantity = 2
-    },
+       },
 
-   new RecipeIngredient
-   {
-       RecipeId = 2,
-       IngredientId = 4, // egg
-       Quantity = 2
-   },
+       new Recipe
+       {
+           Id = 7,
+           Name = "Steak with mashed potato",
+           Description = "Classic main course",
+           ImageUrl = "https://example.com/steak.jpg",
+           Steps = "Season steak with salt and pepper, pan fry steak with olive oil and butter, prepare mashed potato and gravy sauce",
+           Category = RecipeCategory.Main,
+           IngredientList = { "Beef", "Butter", "Potato", "Gravy" }
+       }
+       );
 
-   //chicken and coke 
-   new RecipeIngredient
-   {
-       RecipeId = 3,
-       IngredientId = 6, // Chicken
-       Quantity = 1
-   },
-    new RecipeIngredient
-    {
-        RecipeId = 3,
-        IngredientId = 5, // Coke
-        Quantity = 1
-    },
-
-
-    // Baked Lemon Salmon
-    new RecipeIngredient
-    {
-        RecipeId = 4,
-        IngredientId = 3, // Salmon
-        Quantity = 1
-    },
-
-    // Salmon with Tomato
-    new RecipeIngredient
-    {
-        RecipeId = 5,
-        IngredientId = 3, // Salmon
-        Quantity = 1
-    },
-    new RecipeIngredient
-    {
-        RecipeId = 5,
-        IngredientId = 1, // Tomato
-        Quantity = 1
-    }
-);
+        //seed item 
         modelBuilder.Entity<Item>().HasData(
             new Item
             {

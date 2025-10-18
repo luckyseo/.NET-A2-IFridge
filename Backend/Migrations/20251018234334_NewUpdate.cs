@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class NewUpdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,7 +23,8 @@ namespace Backend.Migrations
                     Category = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     ImageUrl = table.Column<string>(type: "TEXT", nullable: true),
-                    Steps = table.Column<string>(type: "TEXT", nullable: false)
+                    Steps = table.Column<string>(type: "TEXT", nullable: false),
+                    IngredientList = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -99,8 +100,9 @@ namespace Backend.Migrations
                 {
                     RecipeId = table.Column<int>(type: "INTEGER", nullable: false),
                     IngredientId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Quantity = table.Column<int>(type: "INTEGER", nullable: false),
-                    IngredientId1 = table.Column<int>(type: "INTEGER", nullable: true)
+                    RecipeName = table.Column<string>(type: "TEXT", nullable: false),
+                    IngredientName = table.Column<string>(type: "TEXT", nullable: false),
+                    Quantity = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -111,11 +113,6 @@ namespace Backend.Migrations
                         principalTable: "Ingredients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RecipeIngredients_Ingredients_IngredientId1",
-                        column: x => x.IngredientId1,
-                        principalTable: "Ingredients",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_RecipeIngredients_Recipes_RecipeId",
                         column: x => x.RecipeId,
@@ -153,14 +150,16 @@ namespace Backend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Recipes",
-                columns: new[] { "Id", "Category", "Description", "ImageUrl", "Name", "Steps" },
+                columns: new[] { "Id", "Category", "Description", "ImageUrl", "IngredientList", "Name", "Steps" },
                 values: new object[,]
                 {
-                    { 1, "Soup", "Classic tomato soup recipe", "https://example.com/soup.jpg", "Tomato Soup", "Boil tomatoes, blend, add spices." },
-                    { 2, "Side", "Tasty tomato with fried egg", "https://example.com/egg.jpg", "Tomato and Egg", "Cut tomator, fried scramble egg then mix together and add ketchup also seasoning." },
-                    { 3, "Side", "A famous Chinese sweet chicken dish", "https://example.com/chicken.jpg", "Chicken and Coke", "Cut chicken, season with salt and pepper then pan-fry chicken until golden, put Coke and Chinese spices to braise until all cooked." },
-                    { 4, "Main", "A simple lemon salmon with butter", "https://example.com/salmon.jpg", "Baked Lemon Salmon", "Season salmon, put to oevn or pan fry until turn golden, add butter and saute garlic, finish with lemon juice." },
-                    { 5, "Salad", "An easy and hearty salmon with tomato", "https://example.com/tomatoSalmon.jpg", "Salmon with Tomato", "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, cook until ready, add herbs." }
+                    { 1, "Soup", "Classic tomato soup recipe", "https://example.com/soup.jpg", "Tomato,Carrot,Onion", "Tomato Soup", "Boil tomatoes, add some carrot and onion, blend, add spices." },
+                    { 2, "Side", "Tasty tomato with fried egg", "https://example.com/egg.jpg", "Tomato,Egg,SoySauce", "Tomato and Egg", "Cut tomator, fried scramble egg then mix together and add ketchup also seasoning." },
+                    { 3, "Side", "A famous Chinese sweet chicken dish", "https://example.com/chicken.jpg", "Chicken,Coke,SoySauce", "Chicken and Coke", "Cut chicken, season with salt and pepper then pan-fry chicken until golden, put Coke and Soy sauce to braise until all cooked." },
+                    { 4, "Main", "A simple lemon salmon with butter", "https://example.com/salmon.jpg", "Salmon,Lemon,Butter,Garlic", "Baked Lemon Salmon", "Season salmon, put to oevn or pan fry until turn golden, add butter and saute garlic, finish with lemon juice." },
+                    { 5, "Main", "An easy and hearty salmon with tomato", "https://example.com/tomatoSalmon.jpg", "Tomato,Salmon,Onion", "Salmon with Tomato", "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, saute onion, cook until ready, add herbs." },
+                    { 6, "Main", "A Japanese style beef eat with udon", "https://example.com/undonbeef.jpg", "Beef,Teriyaki,Udon,Garlic", "Teriyaki beef with udon", "Stir fry sliced beef with teryaki sauce and boil some udon to go with" },
+                    { 7, "Main", "Classic main course", "https://example.com/steak.jpg", "Beef,Butter,Potato,Gravy", "Steak with mashed potato", "Season steak with salt and pepper, pan fry steak with olive oil and butter, prepare mashed potato and gravy sauce" }
                 });
 
             migrationBuilder.InsertData(
@@ -191,21 +190,6 @@ namespace Backend.Migrations
                     { 3, "Milk", 2, null, 1 }
                 });
 
-            migrationBuilder.InsertData(
-                table: "RecipeIngredients",
-                columns: new[] { "IngredientId", "RecipeId", "IngredientId1", "Quantity" },
-                values: new object[,]
-                {
-                    { 1, 1, null, 2 },
-                    { 1, 2, null, 2 },
-                    { 4, 2, null, 2 },
-                    { 5, 3, null, 1 },
-                    { 6, 3, null, 1 },
-                    { 3, 4, null, 1 },
-                    { 1, 5, null, 1 },
-                    { 3, 5, null, 1 }
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Ingredients_UserId",
                 table: "Ingredients",
@@ -225,11 +209,6 @@ namespace Backend.Migrations
                 name: "IX_RecipeIngredients_IngredientId",
                 table: "RecipeIngredients",
                 column: "IngredientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RecipeIngredients_IngredientId1",
-                table: "RecipeIngredients",
-                column: "IngredientId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShoppingLists_UserId",

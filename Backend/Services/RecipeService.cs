@@ -6,100 +6,126 @@ using Backend.Data;
 using Backend.Dtos;
 using System.Data.SqlTypes;
 using System.ComponentModel;
-using System.Security.Cryptography;
 
-namespace Backend.Services;
+//ensure dto mapping only in recipe 
 
-public class RecipeService : IRecipeService
+namespace Backend.Services
 {
-    private readonly AppDbContext _context;
+    public class RecipeService : IRecipeService
+    {
 
-    //through db 
-    public RecipeService(AppDbContext context)
-    {
-        _context = context;
-    }
+        private readonly AppDbContext _context;
 
-    //get all recipe - for browsing everything 
-    public async Task<List<Recipe>> GetAllRecipes()
-    {
-        return await _context.Recipes.ToListAsync();
-    }
-    public async Task<Recipe?> GetRecipeById(int id)
-    {
-        return await _context.Recipes.FindAsync(id);
-    }
-
-    //let user filter all recipes by category just everything for browsing
-    public async Task<List<Recipe>> GetRecipesByCategory(RecipeCategory Category)
-    {
-        return await _context.Recipes
-             .Where(r => r.Category == Category)
-             .ToListAsync();
-    }
-
-    public async Task<Recipe> AddRecipe(Recipe recipe)
-    {
-        _context.Recipes.Add(recipe);
-        await _context.SaveChangesAsync();
-        return recipe;
-    }
-
-    public async Task<Recipe?> UpdateRecipe(int id, Recipe updatedRecipe)
-    {
-        //find id then update 
-        var existingRecipe = await _context.Recipes.FindAsync(id);
-        if (existingRecipe == null)
+        public RecipeService(AppDbContext context)
         {
-            return null;
+            _context = context;
         }
 
-        //Update data 
-        existingRecipe.Name = updatedRecipe.Name;
-        existingRecipe.Category = updatedRecipe.Category;
-        existingRecipe.Description = updatedRecipe.Description;
-        existingRecipe.ImageUrl = updatedRecipe.ImageUrl;
-        existingRecipe.Steps = updatedRecipe.Steps;
-
-        await _context.SaveChangesAsync(); //save changes
-        return existingRecipe;
-    }
-
-    public async Task<Recipe> DeleteRecipe(int id)
-    {
-        var existingRecipe = await _context.Recipes.FindAsync(id);
-        if (existingRecipe == null)
+        public async Task<List<Recipe>> GetAllRecipes()
         {
-            return null;
+            return await _context.Recipes.ToListAsync();
+
         }
-        _context.Recipes.Remove(existingRecipe);
-        await _context.SaveChangesAsync();
-        return existingRecipe;
-    }
+        public async Task<Recipe?> GetRecipeById(int id)
+        {
+            return await _context.Recipes.FindAsync(id);
+        }
 
-    //get recipes that can be made using available ingredient
-    //make a availale ingredient dto 
+        public async Task<Recipe?> AddRecipe(RecipeDto recipeDto)
+        {
+            var recipe = new Recipe
+            {
+                Name = recipeDto.Name,
+                Category = recipeDto.Category,
+                Description = recipeDto.Description,
+                ImageUrl = recipeDto.ImageUrl,
+                Steps = recipeDto.Steps,
+                IngredientList = recipeDto.IngredientList,
+                RecipeIngredients = new List<RecipeIngredient>()
+            };
+            _context.Recipes.Add(recipe);
+            await _context.SaveChangesAsync();
+            return recipe;
+        }
 
-    public async Task<List<Recipe>> GetRecipesByAvailableIngredient(int userId)
-    {
-        //get user ingredients bane
-        var userIngredientNames = await _context.Ingredients
+        public async Task<Recipe?> UpdateRecipe(int id, RecipeDto updatedRecipeDto)
+        {
+            var existingRecipe = await _context.Recipes.FirstOrDefaultAsync(r => r.Id == id);
+            if (existingRecipe == null)
+            {
+                return null;
+            }
+
+            existingRecipe.Name = updatedRecipeDto.Name;
+            existingRecipe.Category = updatedRecipeDto.Category;
+            existingRecipe.Description = updatedRecipeDto.Description;
+            existingRecipe.ImageUrl = updatedRecipeDto.ImageUrl;
+            existingRecipe.Steps = updatedRecipeDto.Steps;
+            existingRecipe.IngredientList = updatedRecipeDto.IngredientList;
+
+            await _context.SaveChangesAsync();
+            return existingRecipe;
+        }
+
+        public async Task<Recipe?> DeleteRecipe(int id)
+        {
+            var existingRecipe = await _context.Recipes.FindAsync(id);
+            if (existingRecipe == null)
+            {
+                return null;
+            }
+
+            _context.Recipes.Remove(existingRecipe);
+            await _context.SaveChangesAsync();
+            return existingRecipe;
+
+        }
+
+        public async Task<List<Recipe>> GetRecipesByCategory(RecipeCategory category)
+        {
+            return await _context.Recipes.Where(r => r.Category == category)
+            .ToListAsync();
+        }
+        public async Task<List<RecipeSuggestionDto>> getRecipesByAvailableIngredient(int userId)
+        {
+            //get user's ingredient - return the ingredient name
+            var userIngredientName = await _context.Ingredients
             .Where(i => i.UserId == userId)
             .Select(i => i.Name.ToLower())
             .ToListAsync();
 
+            //get all recipes with ingredients
+            var allRecipes = await _context.Recipes.ToListAsync();
 
-        var matchedRecipes = await (
-         from recipe in _context.Recipes
-         where recipe.Ingredients.All(ri => userIngredientNames.Contains(ri.Ingredient.Name.ToLower()))
-         select recipe
-         ).Include(r => r.Ingredients)
-         .ThenInclude(ri => ri.Ingredient)
-         .ToListAsync();
+            var suggestions = new List<RecipeSuggestionDto>();
+            //match ingredient name
+            foreach (var recipe in allRecipes)
+            {
+                //required ingredients for the recipe
+                var requiredIngredientNames = recipe.IngredientList
+                .Select(name => name.ToLower())
+                .ToList();
 
-        return matchedRecipes;
+                //to find what missing 
+                var missingIngredients = requiredIngredientNames
+                .Where(name => !userIngredientName.Contains(name))
+                .ToList();
 
+                //make a suggestion dto for display 
+                suggestions.Add(new RecipeSuggestionDto
+                {
+                    Id = recipe.Id,
+                    Name = recipe.Name,
+                    Description = recipe.Description,
+                    Category = recipe.Category,
+                    ImageUrl = recipe.ImageUrl,
+                    Steps = recipe.Steps,
+                    TotalIngredients = requiredIngredientNames.Count(),
+                    MissingIngredientCounts = missingIngredients.Count(),
+                    MissingIngredients = missingIngredients
+                });
+            }
+            return suggestions.OrderBy(s => s.MissingIngredientCounts).ToList();
+        }
     }
 }
-
-//GeeksforGeeks. (2019, March 14). HashSet in C#. GeeksforGeeks. https://www.geeksforgeeks.org/c-sharp/hashset-in-c-sharp/

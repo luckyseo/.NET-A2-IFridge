@@ -1,13 +1,12 @@
-using Backend.Domain.Entities; 
+using Backend.Domain.Entities;
 namespace Backend.Dtos;
 
 public class RecipeDto
 {
-    public string Id { get; set; }
-    public string Name { get; set; }
-    public  RecipeCategory Category { get; set; }
-    public int Quantity { get; set; }
-    public string Description { get; set; }
-    public string ImageUrl { get; set; }
-    public List<RecipeIngredient> ingredients { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public RecipeCategory Category { get; set; }
+    public string Description { get; set; } = string.Empty;
+    public string? ImageUrl { get; set; } = string.Empty;
+    public string Steps { get; set; } = string.Empty;
+    public List<string> IngredientList { get; set; } = new(); //required ingredient for each recipe
 }
