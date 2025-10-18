@@ -21,7 +21,7 @@ namespace Backend.Controllers
 
         // GET: api/recipes
         [HttpGet]
-        public async Task<ActionResult<List<Recipe>>> GetAll()
+        public async Task<ActionResult<List<Recipe>>> GetAllRecipes()
         {
             var recipes = await _recipeService.GetAllRecipes();
             return Ok(recipes);
@@ -29,7 +29,7 @@ namespace Backend.Controllers
 
         // GET: api/recipe/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<Recipe>> GetById(int id)
+        public async Task<ActionResult<Recipe>> GetRecipeById(int id)
         {
             var recipe = await _recipeService.GetRecipeById(id);
             if (recipe == null)
@@ -40,21 +40,22 @@ namespace Backend.Controllers
 
         // POST: api/recipe
         [HttpPost]
-        public async Task<ActionResult<Recipe>> Add([FromBody] Recipe recipe)
+        public async Task<ActionResult<Recipe>> AddRecipe([FromBody] RecipeCreatedDto dto)
         {
-            var createdRecipe = await _recipeService.AddRecipe(recipe);
-            return CreatedAtAction(nameof(GetById), new { id = createdRecipe.Id }, createdRecipe);
+            var newRecipe = await _recipeService.AddRecipe(dto);
+            return CreatedAtAction(nameof(GetRecipeById), new { id = newRecipe.Id }, newRecipe);
         }
 
         // PUT: api/recipe/{id}
         [HttpPut("{id}")]
-        public async Task<ActionResult<Recipe>> Update(int id, [FromBody] Recipe updatedRecipe)
+        public async Task<ActionResult<Recipe>> Update(int id, [FromBody] RecipeUpdatedDto dto)
         {
-            var recipe = await _recipeService.UpdateRecipe(id, updatedRecipe);
-            if (recipe == null)
+            var updatedRecipe = await _recipeService.UpdateRecipe(id, dto);
+            if (updatedRecipe == null)
+            {
                 return NotFound();
-
-            return Ok(recipe);
+            }
+            return Ok(updatedRecipe);
         }
 
         // DELETE: api/recipe/{id}
@@ -80,14 +81,8 @@ namespace Backend.Controllers
         [HttpGet("user/{userId}/suggestion")]
         public async Task<ActionResult<List<RecipeSuggestionDto>>> GetRecipesByUserIngredients(int userId)
         {
-            var recipes = await _recipeService.GetRecipesByAvailableIngredient(userId);
-
-            if (recipes == null || recipes.Count ==0)
-            {
-                return NotFound();
-            }
-
-            return Ok(recipes);
+            var suggestions = await _recipeService.getRecipesByAvailableIngredient(userId);
+            return Ok(suggestions);
         }
     }
 }

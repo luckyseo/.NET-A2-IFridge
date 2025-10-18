@@ -12,6 +12,6 @@ public class RecipeSuggestionDto
     public string Steps { get; set; } = string.Empty;
 
     public int TotalIngredients { get; set; }
-    public int MissingIngredientsCount { get; set; }
+    public int MissingIngredientCounts { get; set; }
     public List<string> MissingIngredients { get; set; } = new();
 }

@@ -3,6 +3,7 @@ using System.Data.Common;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using Backend.Domain.Entities;
+using Backend.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Data;
@@ -70,7 +71,7 @@ public class AppDbContext : DbContext
             entity.Property(r => r.Steps).HasColumnType("TEXT");
         });
 
-        modelBuilder.Entity<RecipeIngredients>(entity =>
+        modelBuilder.Entity<RecipeIngredient>(entity =>
           {
               entity.HasKey(ri => new { ri.RecipeId, ri.IngredientId });
 
@@ -256,7 +257,7 @@ public class AppDbContext : DbContext
            Category = RecipeCategory.Main
        });
 
-        modelBuilder.Entity<RecipeIngredients>().HasData(
+        modelBuilder.Entity<RecipeIngredient>().HasData(
             new RecipeIngredient { RecipeId = 1, IngredientId = 1 },
             new RecipeIngredient { RecipeId = 2, IngredientId = 1 },
             new RecipeIngredient { RecipeId = 2, IngredientId = 4 },
