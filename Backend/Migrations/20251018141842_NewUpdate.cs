@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class NewMigration : Migration
+    public partial class NewUpdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,7 +23,8 @@ namespace Backend.Migrations
                     Category = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     ImageUrl = table.Column<string>(type: "TEXT", nullable: true),
-                    Steps = table.Column<string>(type: "TEXT", nullable: false)
+                    Steps = table.Column<string>(type: "TEXT", nullable: false),
+                    IngredientList = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -144,16 +145,16 @@ namespace Backend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Recipes",
-                columns: new[] { "Id", "Category", "Description", "ImageUrl", "Name", "Steps" },
+                columns: new[] { "Id", "Category", "Description", "ImageUrl", "IngredientList", "Name", "Steps" },
                 values: new object[,]
                 {
-                    { 1, "Soup", "Classic tomato soup recipe", "https://example.com/soup.jpg", "Tomato Soup", "Boil tomatoes, blend, add spices." },
-                    { 2, "Side", "Tasty tomato with fried egg", "https://example.com/egg.jpg", "Tomato and Egg", "Cut tomator, fried scramble egg then mix together and add ketchup also seasoning." },
-                    { 3, "Side", "A famous Chinese sweet chicken dish", "https://example.com/chicken.jpg", "Chicken and Coke", "Cut chicken, season with salt and pepper then pan-fry chicken until golden, put Coke and Chinese spices to braise until all cooked." },
-                    { 4, "Main", "A simple lemon salmon with butter", "https://example.com/salmon.jpg", "Baked Lemon Salmon", "Season salmon, put to oevn or pan fry until turn golden, add butter and saute garlic, finish with lemon juice." },
-                    { 5, "Main", "An easy and hearty salmon with tomato", "https://example.com/tomatoSalmon.jpg", "Salmon with Tomato", "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, cook until ready, add herbs." },
-                    { 6, "Main", "A Japanese style beef eat with udon", "https://example.com/undonbeef.jpg", "Teriyaki beef with udon", "Stir fry sliced beef with teryaki sauce and boil some udon to go with" },
-                    { 7, "Main", "Classic main course", "https://example.com/steak.jpg", "Steak with mashed potato", "Season steak with salt and pepper, pan fry steak with olive oil and butter, prepare mashed potato and gravy sauce" }
+                    { 1, "Soup", "Classic tomato soup recipe", "https://example.com/soup.jpg", "Tomato,Carrot,Onion", "Tomato Soup", "Boil tomatoes, add some carrot and onion, blend, add spices." },
+                    { 2, "Side", "Tasty tomato with fried egg", "https://example.com/egg.jpg", "Tomato,Egg,SoySauce", "Tomato and Egg", "Cut tomator, fried scramble egg then mix together and add ketchup also seasoning." },
+                    { 3, "Side", "A famous Chinese sweet chicken dish", "https://example.com/chicken.jpg", "Chicken,Coke,SoySauce", "Chicken and Coke", "Cut chicken, season with salt and pepper then pan-fry chicken until golden, put Coke and Soy sauce to braise until all cooked." },
+                    { 4, "Main", "A simple lemon salmon with butter", "https://example.com/salmon.jpg", "Salmon,Lemon,Butter,Garlic", "Baked Lemon Salmon", "Season salmon, put to oevn or pan fry until turn golden, add butter and saute garlic, finish with lemon juice." },
+                    { 5, "Main", "An easy and hearty salmon with tomato", "https://example.com/tomatoSalmon.jpg", "Tomato,Salmon,Onion", "Salmon with Tomato", "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, saute onion, cook until ready, add herbs." },
+                    { 6, "Main", "A Japanese style beef eat with udon", "https://example.com/undonbeef.jpg", "Beef,Teriyaki,Udon,Garlic", "Teriyaki beef with udon", "Stir fry sliced beef with teryaki sauce and boil some udon to go with" },
+                    { 7, "Main", "Classic main course", "https://example.com/steak.jpg", "Beef,Butter,Potato,Gravy", "Steak with mashed potato", "Season steak with salt and pepper, pan fry steak with olive oil and butter, prepare mashed potato and gravy sauce" }
                 });
 
             migrationBuilder.InsertData(

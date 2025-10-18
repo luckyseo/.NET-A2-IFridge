@@ -10,7 +10,8 @@ namespace Backend.Domain.Entities
         public string Description { get; set; } = string.Empty;
         public string? ImageUrl { get; set; } = string.Empty;  //nullable
         public string Steps { get; set; } = string.Empty;
-        //connection to Recipe Ingredient
+
+        public List<string> IngredientList { get; set; } = new(); //required ingredient (name) need for each
         public List<RecipeIngredient> RecipeIngredients { get; set; } = new();
     }
 

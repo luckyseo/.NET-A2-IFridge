@@ -12,7 +12,6 @@ using System.ComponentModel;
 
 namespace Backend.Services
 {
-
     public class RecipeService : IRecipeService
     {
 
@@ -33,7 +32,7 @@ namespace Backend.Services
             return await _context.Recipes.FindAsync(id);
         }
 
-        public async Task<Recipe?> AddRecipe(RecipeCreatedDto recipeDto)
+        public async Task<Recipe?> AddRecipe(RecipeDto recipeDto)
         {
             var recipe = new Recipe
             {
@@ -42,14 +41,15 @@ namespace Backend.Services
                 Description = recipeDto.Description,
                 ImageUrl = recipeDto.ImageUrl,
                 Steps = recipeDto.Steps,
-                RecipeIngredients= new List<RecipeIngredient>()
+                IngredientList = recipeDto.IngredientList,
+                RecipeIngredients = new List<RecipeIngredient>()
             };
             _context.Recipes.Add(recipe);
             await _context.SaveChangesAsync();
             return recipe;
         }
 
-        public async Task<Recipe?> UpdateRecipe(int id, RecipeUpdatedDto updatedRecipeDto)
+        public async Task<Recipe?> UpdateRecipe(int id, RecipeDto updatedRecipeDto)
         {
             var existingRecipe = await _context.Recipes.FirstOrDefaultAsync(r => r.Id == id);
             if (existingRecipe == null)
@@ -62,6 +62,7 @@ namespace Backend.Services
             existingRecipe.Description = updatedRecipeDto.Description;
             existingRecipe.ImageUrl = updatedRecipeDto.ImageUrl;
             existingRecipe.Steps = updatedRecipeDto.Steps;
+            existingRecipe.IngredientList = updatedRecipeDto.IngredientList;
 
             await _context.SaveChangesAsync();
             return existingRecipe;
@@ -95,18 +96,15 @@ namespace Backend.Services
             .ToListAsync();
 
             //get all recipes with ingredients
-            var allRecipes = await _context.Recipes
-            .Include(r => r.RecipeIngredients)
-            .ThenInclude(ri => ri.Ingredient)
-            .ToListAsync();
+            var allRecipes = await _context.Recipes.ToListAsync();
 
             var suggestions = new List<RecipeSuggestionDto>();
             //match ingredient name
             foreach (var recipe in allRecipes)
             {
                 //required ingredients for the recipe
-                var requiredIngredientNames = recipe.RecipeIngredients
-                .Select(ri => ri.Ingredient.Name.ToLower())
+                var requiredIngredientNames = recipe.IngredientList
+                .Select(name => name.ToLower())
                 .ToList();
 
                 //to find what missing 
@@ -123,8 +121,8 @@ namespace Backend.Services
                     Category = recipe.Category,
                     ImageUrl = recipe.ImageUrl,
                     Steps = recipe.Steps,
-                    TotalIngredients = requiredIngredientNames.Count,
-                    MissingIngredientCounts = missingIngredients.Count,
+                    TotalIngredients = requiredIngredientNames.Count(),
+                    MissingIngredientCounts = missingIngredients.Count(),
                     MissingIngredients = missingIngredients
                 });
             }

@@ -40,7 +40,7 @@ namespace Backend.Controllers
 
         // POST: api/recipe
         [HttpPost]
-        public async Task<ActionResult<Recipe>> AddRecipe([FromBody] RecipeCreatedDto dto)
+        public async Task<ActionResult<Recipe>> AddRecipe([FromBody] RecipeDto dto)
         {
             var newRecipe = await _recipeService.AddRecipe(dto);
             return CreatedAtAction(nameof(GetRecipeById), new { id = newRecipe.Id }, newRecipe);
@@ -48,7 +48,7 @@ namespace Backend.Controllers
 
         // PUT: api/recipe/{id}
         [HttpPut("{id}")]
-        public async Task<ActionResult<Recipe>> Update(int id, [FromBody] RecipeUpdatedDto dto)
+        public async Task<ActionResult<Recipe>> Update(int id, [FromBody] RecipeDto dto)
         {
             var updatedRecipe = await _recipeService.UpdateRecipe(id, dto);
             if (updatedRecipe == null)
@@ -83,6 +83,7 @@ namespace Backend.Controllers
         {
             var suggestions = await _recipeService.getRecipesByAvailableIngredient(userId);
             return Ok(suggestions);
+
         }
     }
 }
