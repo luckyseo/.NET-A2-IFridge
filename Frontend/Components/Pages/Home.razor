@@ -46,7 +46,7 @@ else{
         
     </ul>
 
-    @if(Expired is not null && Expired.Count > 0)
+    @if(Expired is not null && Expired.Count > 0) @*when it's expired, lists all the expired ingredients at the bottom*@
     {
         <h3 style="color:red;">Expired Ingredients:</h3>
         <ul>
@@ -61,7 +61,7 @@ else{
 @code{
     private List<Ingredient> ingredients = new List<Ingredient>();
     private bool isLoading = true;
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender) //this manages login status
     {
         if (firstRender)
         {

@@ -4,10 +4,13 @@
 @inject NavigationManager Navigation
 @using Frontend.Models
 @using Frontend.Service
+@inject IJSRuntime JS;
 @rendermode InteractiveServer
 
 <h3>Sign Up to IFridge</h3>
 @* FromName - .NET 8.0 requirement *@
+@* Validations are identified on Models folder *@
+<div class="registerForm">
 <EditForm FormName="registerForm" Model="@model" OnValidSubmit="HandleRegister" class="container">
     <DataAnnotationsValidator />
     <ValidationSummary />
@@ -49,12 +52,24 @@
         <InputText @bind-Value="model.pw" class="form-control"/>
         <ValidationMessage For="@(()=>model.pw)"/>
     </div>
-    <button type="submit" class="btn btn-primary">Sign Up</button>
+    <button id="signupBtn" type="submit" class="btn btn-primary">Sign Up</button>
 </EditForm>
+</div>
 <div>
     <p>Already registered? </p><a href="/login">Login</a>
 </div>
-
+<style>
+.registerForm{
+width:350px;
+}
+.registerForm button{
+    margin-left:10px;
+    border-radius: 5px;
+}
+#signupBtn{
+    margin:10px;
+}
+</style>
 @code {
      //[SupplyParameterFromForm]
     private RegisterModel model{get;set;} = new();
@@ -64,7 +79,7 @@
     private bool idExists = false;
     private string idCheckingMessage = string.Empty;
 
-    private async Task CheckIdAvailability(){
+    private async Task CheckIdAvailability(){ @*Checked whether this id is already in use*@
         if(string.IsNullOrWhiteSpace(model.loginId)){
             idCheckingMessage =string.Empty;
             return;
@@ -75,13 +90,15 @@
 
         if(idExists){
             idCheckingMessage="Already exists";
+            await JS.InvokeVoidAsync("alert",idCheckingMessage);
         }
         else{
-            idCheckingMessage="Available";
+            idCheckingMessage="Available ID";
+            await JS.InvokeVoidAsync("alert",idCheckingMessage);
         }
         isCheckingId=false;
     }
-    private async Task HandleRegister()
+    private async Task HandleRegister()  @*If registeration is successful, it shows ingridient list page*@
     {
         var success = await loginService.RegisterAsync(model);
         if(success){

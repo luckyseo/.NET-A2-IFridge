@@ -10,6 +10,7 @@ namespace Frontend.Models
     public string Description { get; set; }
     public RecipeCategory Category { get; set; }
 
+
   }
 
   public enum RecipeCategory

@@ -23,9 +23,9 @@ namespace Frontend.Service
         }
 
         //get suggested recipes based on available ingredients
-        public async Task<List<Recipe>> GetSuggestedRecipes(int userId)
+        public async Task<List<RecipeSuggestionModel>> GetSuggestedRecipes(int userId)
         {
-            return await _httpClient.GetFromJsonAsync<List<Recipe>>($"http://localhost:5037/api/recipe/user/{userId}/suggestion");
+            return await _httpClient.GetFromJsonAsync<List<RecipeSuggestionModel>>($"http://localhost:5037/api/recipe/user/{userId}/suggestion");
         }
 
         public async Task<Recipe> GetRecipeById(int id)

@@ -3,10 +3,11 @@
 @inject NavigationManager Navigation
 @using Frontend.Models
 @using Frontend.Service
+@inject IJSRuntime JS;
 @rendermode InteractiveServer
 
 <h3>Welcome to IFridge</h3>
-
+<div class="loginContainer"> @*Login form*@
 <EditForm FormName="loginForm" Model="@model" OnValidSubmit="HandleLogin">
     <DataAnnotationsValidator />
     <div>
@@ -23,6 +24,17 @@
     <h4>New Here?</h4>
     <a href="/register">Sign-Up</a>
     </div>
+</div>
+
+<style>
+.loginContainer{
+    width: 300px;
+}
+.loginContainer button{
+    margin-top: 10px;
+    margin-bottom:10px;
+}
+</style>
 @code {
     [SupplyParameterFromForm]
     private LoginModel model{get;set;} = new();
@@ -32,8 +44,9 @@
         var success = await loginService.LoginAsync(model);
         if(success){
             Navigation.NavigateTo("/");
-        }else{
+        }else{   
             err = "Invalid Id/pw";
+            await JS.InvokeVoidAsync("alert",err); //alerts if user type wrong id/pw
         }
     }
 
