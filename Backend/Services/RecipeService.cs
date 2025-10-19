@@ -98,21 +98,31 @@ namespace Backend.Services
             var allRecipes = await _context.Recipes.ToListAsync();
 
             var suggestions = new List<RecipeSuggestionDto>();
+
+            if (userIngredientName == null|| userIngredientName.Count == 0)
+            {
+                return suggestions; //empty list
+            }
+                
             //match ingredient name
             foreach (var recipe in allRecipes)
             {
                 //required ingredients for the recipe
                 var requiredIngredientNames = recipe.IngredientList
-                .Select(name => name.ToLower())
+                .Select(name => name.ToLower().Trim())
                 .ToList();
+
 
                 //to find what missing 
                 var missingIngredients = requiredIngredientNames
                 .Where(name => !userIngredientName.Contains(name))
                 .ToList();
 
-                //make a suggestion dto for display 
-                suggestions.Add(new RecipeSuggestionDto
+                var missingIngredientCounts = missingIngredients.Count();
+                var requiredtotalCounts = requiredIngredientNames.Count();
+
+
+                if (missingIngredientCounts < requiredtotalCounts) {suggestions.Add(new RecipeSuggestionDto
                 {
                     Id = recipe.Id,
                     Name = recipe.Name,
@@ -123,7 +133,20 @@ namespace Backend.Services
                     TotalIngredients = requiredIngredientNames.Count(),
                     MissingIngredientCounts = missingIngredients.Count(),
                     MissingIngredients = missingIngredients
-                });
+                }); }
+                //make a suggestion dto for display 
+                // suggestions.Add(new RecipeSuggestionDto
+                // {
+                //     Id = recipe.Id,
+                //     Name = recipe.Name,
+                //     Description = recipe.Description,
+                //     Category = recipe.Category,
+                //     ImageUrl = recipe.ImageUrl,
+                //     Steps = recipe.Steps,
+                //     TotalIngredients = requiredIngredientNames.Count(),
+                //     MissingIngredientCounts = missingIngredients.Count(),
+                //     MissingIngredients = missingIngredients
+                // });
             }
             return suggestions.OrderBy(s => s.MissingIngredientCounts).ToList();
         }
