@@ -33,25 +33,81 @@
                 }
                 else
                 {
-                    <div class="carousel d-flex flex-row gap-3 overflow-auto">
-                    @foreach (var sr in SuggestedRecipes)
-                    {
-                        <div class="carousel-item d-flex align-items-center gap-2">
-                            <img src="@sr.ImageUrl" alt="@sr.Name" width="100" height="100" />
-                            <span>@sr.Name (@sr.Category.ToString())</span>
-                            <div>
-                            @foreach(var i in sr.Ingredients)
-                            {
-                                <li>@i.Name</li>
-                            }
+                    <h5>There are @SuggestedRecipes.Count recipes</h5>
+                    <div id="display-recipes">
+                    
+                        @for (int i=0;i<SuggestedRecipes.Count;i++)
+                        {
+                            var sr = SuggestedRecipes[i];
+                        
+                            <div id="recipe">
+                                <img class="recipe-img" src="@sr.ImageUrl" alt="@sr.Name" width="150" height="150" />
+                                <span>@sr.Name (@sr.Category.ToString())</span>
+                                @* <div>
+                                 @foreach(var i in sr.Ingredients)
+                                {
+                                    <li>@i.Name</li>
+                                }
+                                </div>  *@
+                                <h5>Description</h5>
+                                <p>@sr.Description</p>
                             </div>
-                            <p>@sr.Description</p>
-                        </div>
-                    }
+                        }
+                       
+                        
                     </div>
+                    
                 }
             </div>
 </div>
+<style>
+#display-recipes{
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 20px;
+    padding: 1rem;
+   
+}
+
+#recipe{
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1rem;
+    width: 200px;
+    text-align: center;
+    color:black;
+    border-radius: 15px;
+    border: 2px solid #000;
+}
+@* #recipe img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+} *@
+#recipe{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    color:black;
+}
+.recipe-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+
+
+</style>
+
+
 @code {
     private List<Recipe> recipes = new List<Recipe>(); //all recipes
     private List<Recipe> SuggestedRecipes = new List<Recipe>(); //suggested Recipes based on current fridge stock    private bool isLoading = true;
@@ -66,9 +122,11 @@
             
             if (LoginService.IsAuthenticated)
             {
-                Console.WriteLine("Loading Recipes...");
-                @* await LoadIngredients(); *@
-                await LoadRecipes();
+                Console.WriteLine("Loading All Recipes...");
+                await LoadAllRecipes();
+
+                Console.WriteLine("Loading Suggested Recipes...");
+                await LoadSuggestedRecipes();
             }
             
             isLoading = false;
@@ -88,9 +146,12 @@
             5=> "Dessert",
         };
     } *@
-    private async Task LoadRecipes(){
+    private async Task LoadSuggestedRecipes(){
+        int userId = LoginService.GetUserId();
+        SuggestedRecipes = await RecipeService.GetSuggestedRecipes(userId);
+    }
+    private async Task LoadAllRecipes(){
         int userId = LoginService.GetUserId();
         recipes = await RecipeService.GetAllRecipes();
-        SuggestedRecipes = await RecipeService.GetSuggestedRecipes(userId);
     }
 }
