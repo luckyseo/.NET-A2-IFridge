@@ -153,13 +153,13 @@ namespace Backend.Migrations
                 columns: new[] { "Id", "Category", "Description", "ImageUrl", "IngredientList", "Name", "Steps" },
                 values: new object[,]
                 {
-                    { 1, "Soup", "Classic tomato soup recipe", "https://example.com/soup.jpg", "Tomato,Carrot,Onion", "Tomato Soup", "Boil tomatoes, add some carrot and onion, blend, add spices." },
-                    { 2, "Side", "Tasty tomato with fried egg", "https://example.com/egg.jpg", "Tomato,Egg,SoySauce", "Tomato and Egg", "Cut tomator, fried scramble egg then mix together and add ketchup also seasoning." },
-                    { 3, "Side", "A famous Chinese sweet chicken dish", "https://example.com/chicken.jpg", "Chicken,Coke,SoySauce", "Chicken and Coke", "Cut chicken, season with salt and pepper then pan-fry chicken until golden, put Coke and Soy sauce to braise until all cooked." },
-                    { 4, "Main", "A simple lemon salmon with butter", "https://example.com/salmon.jpg", "Salmon,Lemon,Butter,Garlic", "Baked Lemon Salmon", "Season salmon, put to oevn or pan fry until turn golden, add butter and saute garlic, finish with lemon juice." },
-                    { 5, "Main", "An easy and hearty salmon with tomato", "https://example.com/tomatoSalmon.jpg", "Tomato,Salmon,Onion", "Salmon with Tomato", "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, saute onion, cook until ready, add herbs." },
-                    { 6, "Main", "A Japanese style beef eat with udon", "https://example.com/undonbeef.jpg", "Beef,Teriyaki,Udon,Garlic", "Teriyaki beef with udon", "Stir fry sliced beef with teryaki sauce and boil some udon to go with" },
-                    { 7, "Main", "Classic main course", "https://example.com/steak.jpg", "Beef,Butter,Potato,Gravy", "Steak with mashed potato", "Season steak with salt and pepper, pan fry steak with olive oil and butter, prepare mashed potato and gravy sauce" }
+                    { 1, "Soup", "Classic tomato soup recipe", "tomatoSoup.png", "Tomato,Carrot,Onion", "Tomato Soup", "Boil tomatoes, add some carrot and onion, blend, add spices." },
+                    { 2, "Side", "Tasty tomato with fried egg", "tomatoAndEgg.png", "Tomato,Egg,SoySauce", "Tomato and Egg", "Cut tomator, fried scramble egg then mix together and add ketchup also seasoning." },
+                    { 3, "Side", "A famous Chinese sweet chicken dish", "ChickenWithCoke.png", "Chicken,Coke,SoySauce", "Chicken and Coke", "Cut chicken, season with salt and pepper then pan-fry chicken until golden, put Coke and Soy sauce to braise until all cooked." },
+                    { 4, "Main", "A simple lemon salmon with butter", "BakedLemonSalmon.png", "Salmon,Lemon,Butter,Garlic", "Baked Lemon Salmon", "Season salmon, put to oevn or pan fry until turn golden, add butter and saute garlic, finish with lemon juice." },
+                    { 5, "Main", "An easy and hearty salmon with tomato", "SalmonAndTomato.png", "Tomato,Salmon,Onion", "Salmon with Tomato", "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, saute onion, cook until ready, add herbs." },
+                    { 6, "Main", "A Japanese style beef eat with udon", "TeriyakiAndUdon.png", "Beef,Teriyaki,Udon,Garlic", "Teriyaki beef with udon", "Stir fry sliced beef with teryaki sauce and boil some udon to go with" },
+                    { 7, "Main", "Classic main course", "SteakAndMaskedPotato.png", "Beef,Butter,Potato,Gravy", "Steak with mashed potato", "Season steak with salt and pepper, pan fry steak with olive oil and butter, prepare mashed potato and gravy sauce" }
                 });
 
             migrationBuilder.InsertData(

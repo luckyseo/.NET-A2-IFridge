@@ -197,7 +197,7 @@ public class AppDbContext : DbContext
                 Id = 1,
                 Name = "Tomato Soup",
                 Description = "Classic tomato soup recipe",
-                ImageUrl = "https://example.com/soup.jpg",
+                ImageUrl = "tomatoSoup.png",
                 Steps = "Boil tomatoes, add some carrot and onion, blend, add spices.",
                 Category = RecipeCategory.Soup,
                 IngredientList = { "Tomato", "Carrot", "Onion" }
@@ -208,7 +208,7 @@ public class AppDbContext : DbContext
             Id = 2,
             Name = "Tomato and Egg",
             Description = "Tasty tomato with fried egg",
-            ImageUrl = "https://example.com/egg.jpg",
+            ImageUrl = "tomatoAndEgg.png",
             Steps = "Cut tomator, fried scramble egg then mix together and add ketchup also seasoning.",
             Category = RecipeCategory.Side,
             IngredientList = { "Tomato", "Egg", "SoySauce" }
@@ -219,7 +219,7 @@ public class AppDbContext : DbContext
             Id = 3,
             Name = "Chicken and Coke",
             Description = "A famous Chinese sweet chicken dish",
-            ImageUrl = "https://example.com/chicken.jpg",
+            ImageUrl = "ChickenWithCoke.png",
             Steps = "Cut chicken, season with salt and pepper then pan-fry chicken until golden, put Coke and Soy sauce to braise until all cooked.",
             Category = RecipeCategory.Side,
             IngredientList = { "Chicken", "Coke", "SoySauce" }
@@ -230,7 +230,7 @@ public class AppDbContext : DbContext
             Id = 4,
             Name = "Baked Lemon Salmon",
             Description = "A simple lemon salmon with butter",
-            ImageUrl = "https://example.com/salmon.jpg",
+            ImageUrl = "BakedLemonSalmon.png",
             Steps = "Season salmon, put to oevn or pan fry until turn golden, add butter and saute garlic, finish with lemon juice.",
             Category = RecipeCategory.Main,
             IngredientList = { "Salmon", "Lemon", "Butter", "Garlic" }
@@ -241,7 +241,7 @@ public class AppDbContext : DbContext
             Id = 5,
             Name = "Salmon with Tomato",
             Description = "An easy and hearty salmon with tomato",
-            ImageUrl = "https://example.com/tomatoSalmon.jpg",
+            ImageUrl = "SalmonAndTomato.png",
             Steps = "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, saute onion, cook until ready, add herbs.",
             Category = RecipeCategory.Main,
             IngredientList = { "Tomato", "Salmon", "Onion" }
@@ -252,7 +252,7 @@ public class AppDbContext : DbContext
            Id = 6,
            Name = "Teriyaki beef with udon",
            Description = "A Japanese style beef eat with udon",
-           ImageUrl = "https://example.com/undonbeef.jpg",
+           ImageUrl = "TeriyakiAndUdon.png",
            Steps = "Stir fry sliced beef with teryaki sauce and boil some udon to go with",
            Category = RecipeCategory.Main,
            IngredientList = { "Beef", "Teriyaki", "Udon", "Garlic" }
@@ -264,7 +264,7 @@ public class AppDbContext : DbContext
            Id = 7,
            Name = "Steak with mashed potato",
            Description = "Classic main course",
-           ImageUrl = "https://example.com/steak.jpg",
+           ImageUrl = "SteakAndMaskedPotato.png",
            Steps = "Season steak with salt and pepper, pan fry steak with olive oil and butter, prepare mashed potato and gravy sauce",
            Category = RecipeCategory.Main,
            IngredientList = { "Beef", "Butter", "Potato", "Gravy" }

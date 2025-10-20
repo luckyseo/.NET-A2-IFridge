@@ -55,7 +55,7 @@
                             var sr = SuggestedRecipes[i];
                         
                             <div id="recipe" class="carousel-item @(i==0?"active":"")">
-                                <img class="recipe-img" src="@sr.ImageUrl" alt="@sr.Name" height="150" />
+                                <img class="recipe-img" src="/imgs/@sr.ImageUrl" alt="@sr.Name" height="150" />
                                 <h4>@sr.Name (@sr.Category.ToString())</h4>
                                 @* <div>
                                  @foreach(var i in sr.Ingredients)

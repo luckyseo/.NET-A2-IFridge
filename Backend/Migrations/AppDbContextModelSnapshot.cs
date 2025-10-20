@@ -207,7 +207,7 @@ namespace Backend.Migrations
                             Id = 1,
                             Category = "Soup",
                             Description = "Classic tomato soup recipe",
-                            ImageUrl = "https://example.com/soup.jpg",
+                            ImageUrl = "tomatoSoup.png",
                             IngredientList = "Tomato,Carrot,Onion",
                             Name = "Tomato Soup",
                             Steps = "Boil tomatoes, add some carrot and onion, blend, add spices."
@@ -217,7 +217,7 @@ namespace Backend.Migrations
                             Id = 2,
                             Category = "Side",
                             Description = "Tasty tomato with fried egg",
-                            ImageUrl = "https://example.com/egg.jpg",
+                            ImageUrl = "tomatoAndEgg.png",
                             IngredientList = "Tomato,Egg,SoySauce",
                             Name = "Tomato and Egg",
                             Steps = "Cut tomator, fried scramble egg then mix together and add ketchup also seasoning."
@@ -227,7 +227,7 @@ namespace Backend.Migrations
                             Id = 3,
                             Category = "Side",
                             Description = "A famous Chinese sweet chicken dish",
-                            ImageUrl = "https://example.com/chicken.jpg",
+                            ImageUrl = "ChickenWithCoke.png",
                             IngredientList = "Chicken,Coke,SoySauce",
                             Name = "Chicken and Coke",
                             Steps = "Cut chicken, season with salt and pepper then pan-fry chicken until golden, put Coke and Soy sauce to braise until all cooked."
@@ -237,7 +237,7 @@ namespace Backend.Migrations
                             Id = 4,
                             Category = "Main",
                             Description = "A simple lemon salmon with butter",
-                            ImageUrl = "https://example.com/salmon.jpg",
+                            ImageUrl = "BakedLemonSalmon.png",
                             IngredientList = "Salmon,Lemon,Butter,Garlic",
                             Name = "Baked Lemon Salmon",
                             Steps = "Season salmon, put to oevn or pan fry until turn golden, add butter and saute garlic, finish with lemon juice."
@@ -247,7 +247,7 @@ namespace Backend.Migrations
                             Id = 5,
                             Category = "Main",
                             Description = "An easy and hearty salmon with tomato",
-                            ImageUrl = "https://example.com/tomatoSalmon.jpg",
+                            ImageUrl = "SalmonAndTomato.png",
                             IngredientList = "Tomato,Salmon,Onion",
                             Name = "Salmon with Tomato",
                             Steps = "Cut tomato in slices, season with salt, pan-fry tomato until soft then add salmon, saute onion, cook until ready, add herbs."
@@ -257,7 +257,7 @@ namespace Backend.Migrations
                             Id = 6,
                             Category = "Main",
                             Description = "A Japanese style beef eat with udon",
-                            ImageUrl = "https://example.com/undonbeef.jpg",
+                            ImageUrl = "TeriyakiAndUdon.png",
                             IngredientList = "Beef,Teriyaki,Udon,Garlic",
                             Name = "Teriyaki beef with udon",
                             Steps = "Stir fry sliced beef with teryaki sauce and boil some udon to go with"
@@ -267,7 +267,7 @@ namespace Backend.Migrations
                             Id = 7,
                             Category = "Main",
                             Description = "Classic main course",
-                            ImageUrl = "https://example.com/steak.jpg",
+                            ImageUrl = "SteakAndMaskedPotato.png",
                             IngredientList = "Beef,Butter,Potato,Gravy",
                             Name = "Steak with mashed potato",
                             Steps = "Season steak with salt and pepper, pan fry steak with olive oil and butter, prepare mashed potato and gravy sauce"
