@@ -41,7 +41,7 @@
     private string err = string.Empty;
     private bool isLoading = true;
     private List<Item> items = new();
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)//this manages loging status
     {
         if (firstRender)
         {

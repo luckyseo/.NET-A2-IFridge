@@ -54,7 +54,7 @@ else{
 @code {
     private List<Item> items = new List<Item>();
     private bool isLoading = true;
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)//this manages loging status
     {
         if (firstRender)
         {

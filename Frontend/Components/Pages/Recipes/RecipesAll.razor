@@ -1,4 +1,4 @@
-@page "/recipes"
+@page "/recipes/all"
 @inject ItemService ItemService
 
 @inject LoginService LoginService
@@ -13,8 +13,7 @@
 
 @* <Navbar /> *@
 
-<h3>View Recipes</h3> @*shows recipe with carousel UI*@
-<button class="btn" @onclick="@(() => Navigation.NavigateTo("/recipes/all"))">View All Recipes</button>
+<h3>View All Recipes</h3> @*shows recipe with carousel UI*@
 
  <div class="card-container">
             <div class="card-body">
@@ -26,15 +25,9 @@
                 {
                     <p>Please <a href="/login">login</a> to see recipes</p>
                 }
-
-                else if(SuggestedRecipes is null || SuggestedRecipes.Count == 0)
-                {
-                <p>No ingredients! Time to go to Woolies!</p>
-                <button class="btn" @onclick="@(() => Navigation.NavigateTo("/shoppinglist/view"))">Shopping</button>
-                }
                 else
                 {
-                    <h5>There are @SuggestedRecipes.Count recipes for you</h5>
+                    <h6>There are @recipes.Count recipes!</h6>
                     <div class="display-container">
                     <button class="btn btn-light grid-control" type="button" data-bs-target="#display-recipes" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -43,16 +36,16 @@
                         </button>
                     <div id="display-recipes" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-indicators">
-                            @for(int i=0;i<SuggestedRecipes.Count;i++){
+                            @for(int i=0;i<recipes.Count;i++){
                                 <button type="button" data-bs-target="#display-recipes" data-bs-slide-to="@i" class="@(i==0?"active":"")" aria-label="Slide @(i+1)"></button>
                             }
                         </div>
                         
                        
                         <div class="carousel-inner">
-                        @for (int i=0;i<SuggestedRecipes.Count;i++)
+                        @for (int i=0;i<recipes.Count;i++)
                         {
-                            var sr = SuggestedRecipes[i];
+                            var sr = recipes[i];
                         
                             <div id="recipe" class="carousel-item @(i==0?"active":"")">
                                 <img class="recipe-img" src="@sr.ImageUrl" alt="@sr.Name" height="150" />
@@ -65,13 +58,6 @@
                                 </div>  *@
                                 <h5>Description</h5>
                                 <p>@sr.Description</p>
-                                <h5>Missing Ingredients</h5>
-                                <p>
-                                @foreach(var m in sr.MissingIngredients){
-                                    <span>@m ,</span> 
-
-                                }
-                                </p>
                             </div>
                            
                         }
