@@ -2,6 +2,7 @@
 
 How to run this app
 -> if app.db is empty, execute this code below frist at the /Backend 
+
 dotnet ef database update
 
 ##frontend - blazor
